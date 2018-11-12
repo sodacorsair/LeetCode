@@ -107,6 +107,10 @@ comment: there's totoally 8 states. The transimitting diagram of states are show
     states with brackets around like s2, s5, s6, s7 are final state.
     
     
+    3. design pattern
+    This ought to be the most resonable solution for these oblivious problems like this.
+    Here's the code by other: 
+    https://leetcode.com/problems/valid-number/discuss/23977/A-clean-design-solution-By-using-design-pattern
     
     
     
