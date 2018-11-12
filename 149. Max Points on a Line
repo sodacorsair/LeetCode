@@ -1,0 +1,63 @@
+https://leetcode.com/problems/max-points-on-a-line/description/
+
+/**
+ * Definition for a point.
+ * struct Point {
+ *     int x;
+ *     int y;
+ *     Point() : x(0), y(0) {}
+ *     Point(int a, int b) : x(a), y(b) {}
+ * };
+ */
+class Solution {
+public:
+    int maxPoints(vector<Point>& points) {
+        int result = 0, temp;   // result: recent max value in outer loop, temp in inner loop
+        
+        for (int i = 0; i < points.size(); i++) {
+            int overlap = 1;      // overlap indicates how many points is overlapped with points[i],
+                                  // including points[i] itself
+            map<pair<int, int>, int> m;
+            temp = 0;
+            
+            for (int j = i + 1; j < points.size(); j++) {
+                int delta_x = points[i].x - points[j].x;
+                int delta_y = points[i].y - points[j].y;
+                int gcd = 0;
+                
+                if (0 == delta_x && 0 == delta_y) {
+                    overlap++;
+                    continue;
+                }
+                else if (0 == delta_x) delta_y = 1;      // if delta of x or that of y is equal to 0
+                else if (0 == delta_y) delta_x = 1;      // then skip and directly simplify
+                else {
+                    // calculate gcd
+                    gcd = GCD(delta_x, delta_y);
+                    delta_y /= gcd;
+                    delta_x /= gcd;                  // represent slope ratio as natural fraction like y/x
+                }
+                
+                pair<int, int> p;
+                p.first = delta_x;
+                p.second = delta_y;
+                m[p]++;
+                temp = max(m[p], temp);
+            }
+            
+            result = max(result, temp + overlap);
+        }
+        
+        return result;
+    }
+    
+    int GCD(int a, int b) {
+        return (a % b) ? GCD(b, a % b) : b;
+    }
+};
+
+
+comment:
+1. the set of points that lie on the same line must appear within a set of point from which draw lines to other points,
+   say, could been seen as a picture roughly like that a group of radiating lines from a central point. Thus, By order of
+   points traversing the maximum could be found.
