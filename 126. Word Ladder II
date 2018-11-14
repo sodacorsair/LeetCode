@@ -1,0 +1,65 @@
+https://leetcode.com/problems/word-ladder-ii/description/
+
+class Solution {
+public:
+    vector<vector<string>> findLadders(string beginWord, string endWord, vector<string>& wordList) {
+        unordered_set<string> words;
+        unordered_set<string> visited;
+        queue<vector<string>> paths;
+        vector<vector<string>> answer;
+        vector<string> path;
+        int min;
+        int distance;
+        
+        for (string s : wordList)
+            words.insert(s);
+        words.insert(beginWord);
+        
+        path.push_back(beginWord);
+        paths.push(path);
+        min = INT_MAX;
+        distance = 0;
+        
+        while (!paths.empty()) {
+            path = paths.front();
+            paths.pop();
+            string curr = path.back();
+            
+            if (distance < path.size()) {
+                for (string str : visited) {
+                    words.erase(str);
+                }
+                visited.clear();
+                distance = path.size();
+            }
+            
+            if (distance == min)
+                break;
+            
+            for (int i = 0; i < curr.size(); i++) {
+                string next = curr;
+                for (char ch = 'a'; ch < 'z' + 1; ch++) {
+                    next[i] = ch;
+                    
+                    if (words.find(next) != words.end()) {
+                        vector<string> newPath = path;
+                        newPath.push_back(next);
+                        visited.insert(next);
+                        if (endWord == next) {
+                            answer.push_back(newPath);
+                            min = distance + 1;
+                        }
+                        else {
+                            paths.push(newPath);
+                        }
+                    }
+                }
+            }
+        }
+        
+        return answer;
+    }
+};
+
+comment:
+  Use the BFS with auxiliary queue which stores paths in descending order in length not the node.
