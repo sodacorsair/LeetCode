@@ -1,0 +1,96 @@
+https://leetcode.com/problems/find-the-closest-palindrome/description/
+
+my solution
+
+class Solution {
+public:
+    string nearestPalindromic(string n) {
+        int mid = n.size() / 2;
+        int len = n.size();
+        string pseudoPalin = n;
+        
+        for (int i = 0; i < mid; i++) 
+            pseudoPalin[len - 1 - i] = n[i];
+        
+        cout << pseudoPalin << endl;
+        
+        long pseudoP = stol(pseudoPalin);
+        cout << pseudoP << endl;
+        long bigP = closestPalindromic(pseudoPalin, true);
+        long littleP = closestPalindromic(pseudoPalin, false);
+        long num = stol(n);
+        
+        long pseudo = abs(num - pseudoP);
+        long big = abs(num - bigP);
+        long little = abs(num - littleP);
+        
+        cout << "pseudoP: " << pseudoP << " bigP: " << bigP 
+            << " littleP: " << littleP << " num: " << num << endl;
+        
+        if (pseudoP == num) {
+            return n = (little <= big ? to_string(littleP) : to_string(bigP));
+        } else if (pseudoP > num) {
+            return n = (little <= pseudo ? to_string(littleP) : to_string(pseudoP));
+        } else {
+            return n = (pseudo <= big ? to_string(pseudoP) : to_string(bigP));
+        }
+    }
+    
+    long closestPalindromic(string pseudo, bool isBig) {
+        cout << "when " << (isBig ? "big: " : "little: ") << endl;
+        
+        int mid = pseudo.size() >> 1;
+        string rStr, lStr;
+        long right, left, palin;
+        
+        if (mid) 
+            rStr = pseudo.substr(pseudo.size() - mid, mid);
+        lStr = pseudo.substr(0, pseudo.size() - mid);
+        cout << "lStr: " << lStr << endl;
+        
+        left = stol(lStr);
+        
+        cout << "left: " << left << endl;
+        
+        if (isBig) {
+            left++;
+            right = reverseLeft(left, mid);
+            cout << "right: " << right << endl;
+        } else {
+            left--;
+            right = reverseLeft(left, mid);
+            cout << "right: " << right << "left: " << left << endl;
+            if ((0 == (left % 10 % 9)) && (0 == pseudo.size() % 2))
+                right = right * 10 + 9;  
+            
+            cout << "right: " << right << endl;
+        }
+        
+        long power = pow(10, mid);
+        
+        return left * power + right;
+    }
+    
+    long reverseLeft(long left, int mid) {
+        long right = 0, factor = pow(10, mid);
+        while (left) {
+            right = right * 10 + left % 10;
+            left /= 10;
+        }
+        
+        return right % factor;
+    }
+};
+
+
+comment:
+1. construct a palindrome string from given string with method where right part is directly replaced by the reverse of left part of
+   string. The partition point between left and right part is defined as left == string[0, len - 1 - mid] and right == string[len - mid,
+   len - 1] where len is refered to length of string and mid = len / 2. 
+2. The constructed palindrome in part 1 we refer as pseudo palindrome, since it would perhaps not the same as the given string while the
+   given string is not palindromic. Then construct two palindrome string one of which is smaller than pseudo one while the another is 
+   larger. The smallest of strings which are larger than one must be the one where value of left part increment by one, i.e., left + 1,
+   similarily, the largest of strings smaller than pseudo one is one whose left part is left. These two strings we call bigP and smallP
+   respectively.
+3. The value of original string must be among the range which upper bound is restricted by bigP and lower bound by smallP. The closest
+   palindrome must be selected from bigP, smallP and pseudo one.
