@@ -1,0 +1,52 @@
+https://leetcode.com/problems/shortest-subarray-with-sum-at-least-k/description/
+
+1. Brute force 
+Suppose that prefix of index i is B[i], then B[i] = sum of (A[0], ..., A[i - 1]), while B[0] = 0 since prefix of 0 is an empty set.
+Then sum of subarray (A[i], ..., A[j]) could written as the shape of B[j + 1] - B[i].
+All subarray could be travesed by double nested loop:
+
+class Solution {
+public:
+    int shortestSubarray(vector<int>& A, int K) {
+        int n = A.size();
+        int res = n + 1;
+        vector<int> B(n + 1, 0);
+        
+        for (int i = 1; i < n + 1; i++)
+            B[i] = B[i - 1] + A[i - 1];
+        
+        for (int i = 0; i < n + 1; i++)
+            for (int j = i; j < n + 1; j++)
+                if (B[j] - B[i] >= K)
+                    res = min(res, j - i);
+        
+        return res <= n ? res : -1;
+    }
+};
+
+It's easy to calculate that time complexity is O(n^2).
+
+2. prune
+
+class Solution {
+public:
+    int shortestSubarray(vector<int>& A, int K) {
+        int n = A.size();
+        int res = n + 1;
+        vector<int> B(n + 1, 0);
+        deque<int> dq;
+        
+        for (int i = 1; i < n + 1; i++)
+            B[i] = B[i - 1] + A[i - 1];
+        
+        for (int i = 0; i < n + 1; i++) {
+            while (dq.size() > 0 && (B[i] - B[dq.front()]) >= K)
+                res = min(res, i - dq.front()), dq.pop_front();
+            while (dq.size() > 0 && (B[i] <= B[dq.back()]))
+                dq.pop_back();
+            dq.push_back(i);
+        }
+        
+        return res <= n ? res : -1;
+    }
+};
