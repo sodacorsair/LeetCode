@@ -1,0 +1,93 @@
+https://leetcode.com/problems/text-justification/description/
+
+1. My solution
+
+class Solution {
+public:
+    vector<string> fullJustify(vector<string>& words, int maxWidth) {
+        int currLen = 0, currInt = 0, currSpace = 0;   // currLen records length of all words and one space before every word
+        int interval;                                   // apart from the first in a line in every loop
+        string currStr;                                 // currInt records number of intervals in a line
+        vector<string> ret;                             // currSpace records the number of spaces in a line
+        
+        int i = 0, j;
+        while (i < words.size()) {
+            currStr = words[i];
+            currLen = words[i].size();
+            currInt = 0;
+            currSpace = 0;
+            i++;
+            j = i;     // j indicates the start position in words
+            while (i < words.size()) {         // this while loop find all intervals between words in certain line
+                if ((currLen + words[i].size() + 1) > maxWidth)
+                    break;
+                currLen += words[i].size() + 1;
+                currInt++, i++;
+            }
+            
+            
+            currSpace = maxWidth - currLen + currInt;
+            if (i != words.size()) {            // if i == words.size(), it means to reach the last line, which needs left-justified.
+                interval = currInt ? (currSpace + currInt - 1) / currInt : 0;  // judge if interval == 0, then implement left-justified.
+                if (interval) {               // if interval != 0, then interval need to calculate every loop
+                    while (currInt) {            // the formula for interval is defined as: interval = ceil(currentSpace / currentInterval)
+                        for (int k = interval; k > 0; k--)
+                            currStr = currStr + ' ';
+                        currStr = currStr + words[j];
+                        j++, currInt--;
+                        currSpace -= interval;
+                        interval = currInt ? (currSpace + currInt - 1) / currInt : 0;
+                    }
+                } else {
+                    for (int k = currSpace; k > 0; k--) 
+                        currStr = currStr + ' ';
+                }
+                ret.push_back(currStr);
+            } else {
+                for (; j < i; j++) {
+                    currStr = currStr + ' ';
+                    currStr = currStr + words[j];
+                }
+                for (int k = currSpace - currInt; k > 0; k--)
+                    currStr = currStr + ' ';
+                ret.push_back(currStr);
+            }
+        } // while
+        
+        return ret;
+    }
+};
+
+comment:
+The performance of my solution is very awful globally.
+
+2. improvement
+
+class Solution {
+public:
+    vector<string> fullJustify(vector<string>& words, int maxWidth) {
+        int curLen = 0, currInt = 0, currSpace = 0;
+        int interval;
+        string curStr;
+        vector<string> ret;
+        
+        for (int i = 0, j; i < words.size(); i = j) {
+            curLen = 0;
+            curStr = words[i];
+            for (j = i; j < words.size() && (curLen + (j - i) + words[j].size() <= maxWidth); curLen += words[j++].size()) ;
+            
+            for (unsigned int k = i + 1; k < j; k++) {
+                interval = 1;
+                if (j < words.size())
+                    interval = (maxWidth - curLen + (j - k) - 1) / (j - k);
+                curLen += interval;
+                curStr.append(interval, ' ').append(words[k]);
+            }    
+            
+            curStr.append(maxWidth - curLen, ' ');
+            ret.push_back(curStr);
+        }
+        
+        return ret;
+    }
+};
