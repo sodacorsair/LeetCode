@@ -1,0 +1,31 @@
+关键词：动态规划，利用s[n] = s[n + 1] + s[n + 2]从底层开始
+
+https://leetcode-cn.com/problems/decode-ways/submissions/
+
+class Solution {
+    public int numDecodings(String s) {
+        if (s == null || s.length() == 0) {
+            return 0;
+        }
+        
+        int dp = 0, dpN = 1, dpNN = 0, num = 0;
+        
+        for (int i = s.length() - 1; i >= 0; i--) {
+            if (s.charAt(i) == '0') {
+                dp = 0;
+            } else {
+                dp = dpN;
+                if (s.length() - 1 > i) {
+                    num = (s.charAt(i) - '0') * 10 + s.charAt(i + 1) - '0';
+                    if (num <= 26) {
+                        dp += dpNN;
+                    }
+                }
+            }
+            dpNN = dpN;
+            dpN = dp;
+        }
+        
+        return dp;
+    }
+}
