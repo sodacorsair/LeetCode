@@ -1,0 +1,31 @@
+关键词：第n个字母在长度为s的多个子串与另一不同子串拼接的字符串中，所处的位置等效于用n除以总长S的余数，若余数在落在另一子串中，只消通过循环减1，到达n
+所在位置余数为0；若余数落在子串中，用n%s得到的位置是在第一个子串中，该位置上字母与原来n所在位置字母相同。故可用逆向递推。
+
+https://leetcode-cn.com/problems/decoded-string-at-index/solution/suo-yin-chu-de-jie-ma-zi-fu-chuan-by-leetcode/
+
+class Solution {
+    public String decodeAtIndex(String S, int K) {
+        long size = 0;
+        for (int i = 0; i < S.length(); i++) {
+            if (Character.isDigit(S.charAt(i))) {
+                size *= S.charAt(i) - '0';
+            } else {
+                size++;
+            }
+        }
+        
+        for (int i = S.length() - 1; i >= 0; i--) {
+            K %= size;
+            if (Character.isLetter(S.charAt(i)) && K == 0) {
+                return Character.toString(S.charAt(i));
+            }
+            if (Character.isDigit(S.charAt(i))) {
+                size /= S.charAt(i) - '0';
+            } else {
+                size--;
+            }
+        }
+        
+        return null;
+    }
+}
