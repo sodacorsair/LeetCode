@@ -1,0 +1,38 @@
+关键词：除数以系数2^x逼近被除数
+
+https://leetcode-cn.com/problems/divide-two-integers/submissions/
+
+class Solution {
+    public int divide(int dividend, int divisor) {
+        long dividendl = (long)dividend, divisorl = (long)divisor;
+        int sign = 1;
+        if (dividendl < 0) {
+            dividendl *= -1;
+            sign = -sign;
+        }
+        if (divisorl < 0) {
+            divisorl *= -1;
+            sign = -sign;
+        }
+        
+        long res = 0;
+        long sim, preSim, count, preCount;
+        while (dividendl >= divisorl) {
+            preSim = 0;
+            sim = divisorl;
+            count = 1;
+            preCount = 0;
+            while ((dividendl - sim) >= 0) {
+                preSim = sim;
+                sim += sim;
+                preCount = count;
+                count += count;
+            }
+            dividendl -= preSim;
+            res += preCount;
+        }
+        
+        res *= sign;
+        return (int)((res > (long)(Integer.MAX_VALUE)) ? Integer.MAX_VALUE : ((res < (long)(Integer.MIN_VALUE)) ? Integer.MIN_VALUE : res));
+    }
+}
