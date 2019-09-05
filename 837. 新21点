@@ -1,0 +1,23 @@
+关键：设f(x)为当前分数为x时最后游戏结束分数不超过N的概率。显然f(x) = 1, when K <= x <= N, and f(x) = 0 when x > N。
+并且有方程f(x) = (f(x) + f(x + 1) + ... + f(x + W)) / W,每次计算f(x)需W次，可以考虑差分方程f(x) = f(x - 1) + (f(x + W) - f(x)) / W，
+这样只需一次可以计算出f(x - 1)。
+
+https://leetcode-cn.com/problems/new-21-game/submissions/
+
+class Solution {
+    public double new21Game(int N, int K, int W) {
+        double[] f = new double[K + W + 1];
+        
+        for (int i = K; i <= N; i++) {
+            f[i] = 1.0;
+        }
+        
+        double S = Math.min(N - K + 1, W);
+        for (int i = K - 1; i >= 0; i--) {
+            f[i] = S / W;
+            S += f[i] - f[i + W];
+        }
+        
+        return f[0];
+    }
+}
