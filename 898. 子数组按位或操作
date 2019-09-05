@@ -1,0 +1,19 @@
+关键：计算连续子数组的按位或，对于a[j]，将a[j]|a[j-1]|...|a[0], ..., a[j]|a[j-1]保存在HashSet中，HashSet最大不超过32，等下一数a[j+1]再与该HashMap
+中各个数进行按位或，时间复杂度O(N * 32)。
+
+https://leetcode-cn.com/problems/bitwise-ors-of-subarrays/submissions/
+
+class Solution {
+    public int subarrayBitwiseORs(int[] A) {
+        HashSet<Integer> ans = new HashSet<>(), cur = new HashSet<>(), cur2;
+        for (int a : A) {
+            cur2 = new HashSet<Integer>();
+            cur2.add(a);
+            for (Integer i : cur) {
+                cur2.add(a|i);
+            }
+            ans.addAll(cur = cur2);
+        }
+        return ans.size();
+    }
+}
