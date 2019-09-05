@@ -1,0 +1,23 @@
+关键词：设想一个单调递增序列[a1, a2, ..., aN],若在序列每一个数上+K或-K，找到新序列的最小相邻两数差值，只需在相邻二点ai + K,a(i+1) - K每组进行比较即可，
+用三角不等式可以证。若寻找新序列最小值和最大值之间的最小差值，只需要构造[a1 + K, a2 + K, ..., ai + K, a(i+1) - K, ..., aN - K]即可，在区间[1,i]上
+最小值为a1 + K,在区间[i+1, N]上最大值为aN - K，则新序列的全局最小值为min(a1 + K, a(i+1) - K),全局最大值为max(aN - K, ai + K)。
+
+https://leetcode-cn.com/problems/smallest-range-ii/submissions/
+
+class Solution {
+    public int smallestRangeII(int[] A, int K) {
+        Arrays.sort(A);
+        int ans = A[A.length - 1] - A[0];
+        int right = A[A.length - 1] - K;
+        int left = A[0] + K;
+        for (int i = 0; i < A.length - 1; i++) {
+            int low = Math.min(left, A[i + 1] - K);
+            int high = Math.max(right, A[i] + K);
+            if (ans > high - low) {
+                ans = high - low;
+            }
+        }
+        
+        return ans;
+    }
+}
