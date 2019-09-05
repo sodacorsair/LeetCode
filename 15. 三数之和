@@ -1,0 +1,33 @@
+关键：将数组排序，从左至右遍历，每次遍历固定开始的数，后面两个指针分别指向最左和最右两个数字，当和大于零移动右指针，反之移动左指针。
+存在的边界情况有需要跳过重复的遍历固定数，需要跳过重复的指针指向的数字。
+
+https://leetcode-cn.com/problems/3sum/submissions/
+
+class Solution {
+    public List<List<Integer>> threeSum(int[] nums) {
+        Arrays.sort(nums);
+        List<List<Integer>> ans = new ArrayList();
+        
+        for (int i = 0; i < nums.length; i++) {
+            if (i != 0 && nums[i] == nums[i - 1]) continue;
+            int L = i + 1, R = nums.length - 1;
+            int sum;
+            while (L < R) {
+                sum = nums[i] + nums[L] + nums[R];
+                if (sum < 0) {
+                    L++;
+                } else if (sum > 0) {
+                    R--;
+                } else {
+                    ans.add(Arrays.asList(nums[i], nums[L], nums[R]));
+                    while (L < nums.length - 1 && nums[L] == nums[L + 1]) L++;
+                    L++;
+                    while (R > 0 && nums[R] == nums[R - 1]) R--;
+                    R--;
+                }
+            }
+        }
+        
+        return ans;
+    }
+}
