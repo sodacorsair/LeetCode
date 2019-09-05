@@ -1,0 +1,28 @@
+关键：使用前缀和sum[n]存储第n位及以前数字之和。若sum[j] - sum[i](j - i >= 1)的[i + 1, j]区间和是k的整数倍，则sum[j] % k == sum[i] % k。注意上述
+未覆盖区间[0, j]，若该区间为k的整数倍，则sum[j] % k == 0，只需设置一个HashMap在对应余数位置放置第一次出现的索引且保证后面命中索引与取出值差值大于等于
+2。
+
+https://leetcode-cn.com/problems/continuous-subarray-sum/submissions/
+
+class Solution {
+    public boolean checkSubarraySum(int[] nums, int k) {
+      
+        int sum = 0;
+        HashMap<Integer, Integer> hashmap = new HashMap<>();
+        hashmap.put(0, -1);
+        for (int i = 0; i < nums.length; i++) {
+            sum += nums[i];
+            if (k != 0) {
+                sum %= k;
+            }
+            if (hashmap.containsKey(sum)) {
+                if (i - hashmap.get(sum) > 1) {
+                    return true;
+                }
+            } else {
+                hashmap.put(sum, i);
+            }
+        }
+        return false;
+    }
+}
