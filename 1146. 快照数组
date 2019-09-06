@@ -1,0 +1,31 @@
+https://leetcode-cn.com/problems/snapshot-array/solution/shi-yong-mapinteger-mapinteger-integerde-jie-gou-c/
+
+class SnapshotArray {
+    private HashMap<Integer, HashMap<Integer, Integer>> snaps;
+    private int snapId = 0;
+
+    public SnapshotArray(int length) {
+        snaps = new HashMap<>(length);
+        while (length-- > 0) {
+            snaps.put(length, new HashMap<Integer, Integer>());
+        }
+    }
+    
+    public void set(int index, int val) {
+        snaps.get(index).put(snapId, val);
+    }
+    
+    public int snap() {
+        return snapId++;
+    }
+    
+    public int get(int index, int snap_id) {
+        while (snap_id > -1) {
+            if (snaps.get(index).get(snap_id) != null) {
+                return snaps.get(index).get(snap_id);
+            }
+            snap_id--;
+        }
+        return 0;
+    }
+}
