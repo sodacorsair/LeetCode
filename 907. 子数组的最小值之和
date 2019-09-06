@@ -1,0 +1,51 @@
+关键：利用两个单调栈分别记录遍历至i时，左区间或右区间比当前值小的数出现最近位置。具体做法为若栈中顶部值大于等于（或大于，左边界序列或右边界序列相等条件
+不同以免出现两个以不同位置但数值相同的A[i],A[j]为最小值但边界重复的情况）时将栈顶值弹出，直到栈顶值小于（或小于等于）时，此时栈顶值即为最近的边界，再将
+当前值压入。（同样地，如果栈顶值不弹出只在遍历时满足单调性时压入值，最后得到的是离该点最远的数值）。由此可得到两个边界序列，左边界L和右边界R，对索引i而言
+由两个边界决定并含有A[i]的子数组个数由排列组合可知为(i - A[L]) * (A[R] - i)。
+
+https://leetcode-cn.com/problems/sum-of-subarray-minimums/submissions/
+
+class Solution {
+    public int sumSubarrayMins(int[] A) {
+        if (A == null && A.length == 0) {
+            return 0;
+        }
+        
+        int MOD = 1_000_000_007;
+        int[] left = new int[A.length], right = new int[A.length];
+        
+        Stack<Integer> stack = new Stack();
+        for (int i = 0; i < A.length; i++) {
+            while (!stack.isEmpty() && A[stack.peek()] > A[i]) {
+                stack.pop();
+            }
+            if (stack.isEmpty()) {
+                left[i] = -1;
+            } else {
+                left[i] = stack.peek();
+            }
+            stack.push(i);
+        }
+        
+        stack = new Stack();
+        for (int i = A.length - 1; i >= 0; i--) {
+            while (!stack.isEmpty() && A[stack.peek()] >= A[i]) {
+                stack.pop();
+            }
+            if (stack.isEmpty()) {
+                right[i] = A.length;
+            } else {
+                right[i] = stack.peek();
+            }
+            stack.push(i);
+        }
+        
+        long ans = 0;
+        for (int i = 0; i < A.length; i++) {
+            ans += (i - left[i]) * (right[i] - i) % MOD * A[i] % MOD;
+            ans %= MOD;
+        }
+        
+        return (int)ans;
+    }
+}
