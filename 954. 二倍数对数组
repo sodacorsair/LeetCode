@@ -1,0 +1,30 @@
+https://leetcode-cn.com/problems/array-of-doubled-pairs/submissions/
+
+class Solution {
+    public boolean canReorderDoubled(int[] A) {
+        Map<Integer, Integer> count = new HashMap();
+        for (int a : A) {
+            count.put(a, count.getOrDefault(a, 0) + 1);
+        }
+        
+        Integer[] B = new Integer[A.length];
+        for (int i = 0; i < A.length; i++) {
+            B[i] = A[i];
+        }
+        Arrays.sort(B, Comparator.comparingInt(Math::abs));
+        
+        for (int a : B) {
+            if (count.get(a) == 0) {
+                continue;
+            }
+            
+            if (count.getOrDefault(a * 2, 0) <= 0) {
+                return false;
+            }
+            count.put(a, count.get(a) - 1);
+            count.put(a * 2, count.get(a * 2) - 1);
+        }
+        
+        return true;
+    }
+}
