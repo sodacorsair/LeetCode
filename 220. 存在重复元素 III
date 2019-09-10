@@ -1,0 +1,61 @@
+关键词：solution01 BST + 滑动窗口
+
+https://leetcode-cn.com/problems/contains-duplicate-iii/submissions/
+
+class Solution {
+    public boolean containsNearbyAlmostDuplicate(int[] nums, int k, int t) {
+        TreeSet<Long> tree = new TreeSet<>();
+        for (int i = 0; i < nums.length; i++) {
+            Long s = tree.ceiling(Long.valueOf(nums[i]));
+            if (s != null && s - nums[i] <= t) return true;
+            Long g = tree.floor(Long.valueOf(nums[i]));
+            if (g != null && nums[i] - g <= t) return true;
+            
+            tree.add(Long.valueOf(nums[i]));
+            if (tree.size() > k) {
+                tree.remove(Long.valueOf(nums[i - k]));
+            }
+        }
+        
+        return false;
+    }
+}
+
+solution02: 将nums映射到间隔大小为t+1的桶上，同一个桶的元素差值小于等于t，意味着同一个桶上若有两个元素则代表着存在。每个元素只考察滑动窗口前k-1
+个元素与本桶和邻近桶元素。邻近桶不可能超过一个元素否则为真。
+
+class Solution {
+    long getID(long num, int w) {
+        return num >= 0 ? num / w : (num + 1) / w - 1;
+    }
+    
+    public boolean containsNearbyAlmostDuplicate(int[] nums, int k, int t) {
+        if (t < 0) return false;
+        
+        HashMap<Long, Long> hashmap = new HashMap<>();
+        int w = t + 1;
+        
+        for (int i = 0; i < nums.length; i++) {
+            long m = getID((long)nums[i], w);
+            
+            if (hashmap.containsKey(m)) {
+                return true;
+            }
+            
+            if (hashmap.containsKey(m - 1) && nums[i] - hashmap.get(m - 1) < w) {
+                return true;
+            }
+            
+            if (hashmap.containsKey(m + 1) && hashmap.get(m + 1) - nums[i] < w) {
+                return true;
+            }
+            
+            hashmap.put(m, Long.valueOf(nums[i]));
+            if (i >= k) {
+                hashmap.remove(getID((long)nums[i - k], w));
+            }
+        }
+        
+        return false;
+    }
+}
