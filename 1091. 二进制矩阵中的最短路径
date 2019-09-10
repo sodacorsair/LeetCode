@@ -1,0 +1,66 @@
+关键词：bfs求最短路径
+
+https://leetcode-cn.com/problems/shortest-path-in-binary-matrix/submissions/
+
+class Solution {
+    public int shortestPathBinaryMatrix(int[][] grid) {
+        if (grid[0][0] == 1) return -1;
+        
+        int rows = grid.length, cols = grid[0].length;
+        boolean[][] matrix = new boolean[rows + 2][cols + 2];
+        boolean[][] isVisited = new boolean[rows + 2][cols + 2];
+        
+        for (int i = 0; i < cols + 2; i++) {
+            matrix[0][i] = false;
+            matrix[rows + 1][i] = false;
+        }
+        
+        for (int i = 1; i < rows + 1; i++) {
+            matrix[i][0] = false;
+            matrix[i][cols + 1] = false;
+            for (int j = 1; j < cols + 1; j++) {
+                matrix[i][j] = grid[i - 1][j - 1] == 0;
+            }
+        }
+        
+        int dirs[][] = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}, {1, 1}, {-1, 1}, {1, -1}, {-1, -1}};
+        Queue<Node> queue = new LinkedList();
+        queue.offer(new Node(1, 1, 1));
+        isVisited[1][1] = true;
+        int mX, mY;
+        
+        while (!queue.isEmpty()) {
+            Node tmp = queue.poll();
+            
+            if (tmp.isEquals(rows, cols)) return tmp.path;
+            
+            for (int[] dir : dirs) {
+                mX = tmp.x + dir[0];
+                mY = tmp.y + dir[1];
+                if (isVisited[mX][mY]) continue;
+                isVisited[mX][mY] = true;
+                if (matrix[mX][mY]) queue.offer(new Node(mX, mY, tmp.path + 1));
+            }
+        }
+        
+        return -1;
+    }
+    
+    class Node {
+        int x, y;
+        int path;
+        
+        public Node(int x, int y, int path) {
+            this.x = x;
+            this.y = y;
+            this.path = path;
+        }
+        
+        public boolean isEquals(int x, int y) {
+            if (this.x == x && this.y == y) {
+                return true;
+            }
+            return false;
+        }
+    }
+}
