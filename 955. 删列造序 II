@@ -1,0 +1,27 @@
+关键词：字典排序，当前列中相邻两行满足严格小于则后面不用比较，若相等继续比较，若严格大于删除该列。在某列循环后记录该列中严格小于和相等的情况。
+
+https://leetcode-cn.com/problems/delete-columns-to-make-sorted-ii/submissions/
+
+class Solution {
+    public int minDeletionSize(String[] A) {
+        int ans = 0;
+        int rows = A.length, cols = A[0].length();
+        boolean[] cuts = new boolean[rows - 1];
+        
+        outer: for (int j = 0; j < cols; j++) {
+            for (int i = 0; i < rows - 1; i++) {
+                if (!cuts[i] && A[i].charAt(j) > A[i + 1].charAt(j)) {
+                    ans++;
+                    continue outer;
+                }
+            }
+            for (int i= 0; i < rows - 1; i++) {
+                if (A[i].charAt(j) < A[i + 1].charAt(j)) {
+                    cuts[i] = true;
+                }
+            }
+        }
+        
+        return ans;
+    }
+}
