@@ -1,0 +1,52 @@
+提要：因为一次可以走六步，和普通的bfs不同的是，有可能被访问过的格子当前路径数与之前相同，如果相同且含有梯子说明是同一回合内有某个格子到了这个格子，此时
+要判断是否有梯子，梯子可以继续移动，否则忽略。
+
+https://leetcode-cn.com/problems/snakes-and-ladders/submissions/
+
+class Solution {
+    public int snakesAndLadders(int[][] board) {
+        int rows = board.length, cols = board[0].length;
+        int[] map = new int[rows * cols];
+        int finale = rows * cols - 1;
+        boolean isEven = false;
+        
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if (isEven) {
+                    map[i * cols + j] = board[rows - 1 - i][cols - j - 1];
+                } else {
+                    map[i * cols + j] = board[rows - 1 - i][j];
+                }
+            }
+            isEven = !isEven;
+        }
+        
+        Queue<Integer> queue = new LinkedList<>();
+        HashMap<Integer, Integer> hashmap = new HashMap<>();
+        queue.offer(0);
+        hashmap.put(0, 0);
+        while (!queue.isEmpty()) {
+            int tmp = queue.poll();
+            int path = hashmap.get(tmp);
+            // System.out.print(tmp + ": " + path + "\t");
+            if (tmp == finale) {
+                return hashmap.get(tmp);
+            } 
+            for (int i = tmp + 1; i <= Math.min(tmp + 6, finale); i++) {
+                    if (map[i] != -1) {
+                        if (!hashmap.containsKey(map[i] - 1)) {
+                            hashmap.put(map[i] - 1, path + 1);
+                            queue.offer(map[i] - 1);
+                        }
+                    } else {
+                        if (!hashmap.containsKey(i)) {
+                            hashmap.put(i, path + 1);
+                            queue.offer(i);
+                        }
+                    }
+            }
+        }
+        
+        return -1;
+    }
+}
