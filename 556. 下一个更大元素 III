@@ -1,0 +1,47 @@
+关键：从后往前找到第一个逆序对(n[i+1]<n[i])，将区间[i,0]的数字进行从小到大的排序，从中找到第一个比n[i+1]大的数字并交换。
+
+https://leetcode-cn.com/problems/next-greater-element-iii/submissions/
+
+class Solution {
+    public int nextGreaterElement(int n) {
+        if (n < 10) return -1;
+        
+        int tmp = n, index = 0, left = -1, right = -1;
+        List<Integer> needSort = new ArrayList<>();
+        while (tmp > 0) {
+            left = tmp % 10;
+            index++;
+            if (left < right) {
+                break;
+            }
+            right = left;
+            needSort.add(right);
+            tmp /= 10;
+        }
+        
+        if (tmp == 0) return -1;
+        Collections.sort(needSort);
+        for (int i = 0; i < needSort.size(); i++) {
+            if (needSort.get(i) > left) {
+                tmp = left;
+                left = needSort.get(i);
+                needSort.set(i, tmp);
+                break;
+            }
+        }
+        
+        tmp = 1;
+        for (int i = 0; i < index; i++) {
+            tmp *= 10;
+        }
+        n = n / tmp * tmp;
+        n += tmp / 10 * left;
+        tmp = 1;
+        for (int i = needSort.size() - 1; i >= 0; i--) {
+            n += tmp * needSort.get(i);
+            tmp *= 10;
+        }
+        
+        return n >= 0 ? n : -1;
+    }
+}
