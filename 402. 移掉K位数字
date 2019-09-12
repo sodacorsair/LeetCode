@@ -1,0 +1,51 @@
+关键：在前k位中，若前k-1位已保持递增性（高位小数，低位大数），则插入第k位数时应将大于该数的数字弹出去，所以要维护一个弹出数的递增栈。注意是大于该数时
+弹出，如果相等时弹出可能后面有低位大数没有办法弹掉。
+
+https://leetcode-cn.com/problems/remove-k-digits/submissions/
+
+class Solution {
+    public String removeKdigits(String num, int k) {
+        if (k >= num.length()) {
+            return "0";
+        }
+        
+        Stack<Integer> stack = new Stack();
+        
+        int i;
+        for (i = 0; i < num.length(); i++) {
+            int val = num.charAt(i) - '0';
+            
+            if (k == 0) {
+                break;
+            }
+            
+            while (!stack.isEmpty() && val < stack.peek() && k > 0) {
+                stack.pop();
+                k--;
+            }
+            
+            if (!stack.isEmpty() || val != 0) {
+                stack.push(val);
+            }
+        }
+        
+        StringBuilder sb = new StringBuilder();
+        while (k > 0 && !stack.isEmpty()) {
+            stack.pop();
+            k--;
+        }
+        while (!stack.isEmpty()) {
+            sb.insert(0, String.valueOf(stack.pop()));
+        }
+        
+        if (i < num.length()) {
+            sb.append(num.substring(i));
+        }
+        
+        if (sb.toString().equals("")) {
+            sb.append("0");
+        }
+        
+        return sb.toString();
+    }
+}
