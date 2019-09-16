@@ -1,0 +1,49 @@
+关键：Manacher算法，从前往后遍历字符串，对于每一个字符s[i]使用中心扩展法得到以i为中心的最大回文子串半径为p[i]，定义当前右边界为当前遍历产生的p[i]序列
+最大值，半径为R，中心位置为C，对C + R内的i而言，i以C对称的i_mirror具有p[i_mirror]，这样i使用中心扩展无须探测i到i + p[i_mirror]的范围，直接从后者开
+始，若扩展后的边界大于右边界则更新R和C，这样的中心扩展至多探测n个位置。
+
+https://leetcode-cn.com/problems/longest-palindromic-substring/submissions/
+
+class Solution {
+    public String longestPalindrome(String s) {
+        if (s == null && s == "") return "";
+        
+        String t = "^";
+        for (int i = 0; i < s.length(); i++) {
+            t += "#" + s.charAt(i);
+        }
+        t += "#$";
+        
+        int center = 1, rightBound = 0, i_mirror;
+        int[] p = new int[t.length()];
+        for (int i = 1; i < t.length() - 1; i++) {
+            i_mirror = 2 * center - i;
+            if (i < rightBound) {
+                p[i] = Math.min(rightBound - i, p[i_mirror]);
+            } else {
+                p[i] = 0;
+            }
+            
+            while (t.charAt(i + p[i] + 1) == t.charAt(i - p[i] - 1)) {
+                p[i]++;
+            }
+            
+            if (i + p[i] > rightBound) {
+                center = i;
+                rightBound = i + p[i];
+            }
+        }
+        
+        int maxLen = -1, i_center = -1;
+        for (int i = 0; i < t.length(); i++) {
+            if (p[i] > maxLen) {
+                maxLen = p[i];
+                i_center = i;
+            }
+        }
+        
+        int start = (i_center - maxLen) / 2;
+        int end = start + maxLen;
+        return s.substring(start, end);
+    }
+}
