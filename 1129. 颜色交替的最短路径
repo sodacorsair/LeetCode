@@ -1,0 +1,71 @@
+关键：bfs广搜时，不要重复探测边（有环），当一个点已被探测时，只压入以该点为起点的边，不更新该点的最小距离。
+
+https://leetcode-cn.com/problems/shortest-path-with-alternating-colors/submissions/
+
+class Solution {
+    public int[] shortestAlternatingPaths(int n, int[][] red_edges, int[][] blue_edges) {
+        NodeList[] adjacent = new NodeList[n];
+        int[] answer = new int[n];
+        
+        for (int i = 0; i < answer.length; i++) {
+            answer[i] = -1;
+        }
+        answer[0] = 0;
+        for (int i = 0; i < adjacent.length; i++) {
+            adjacent[i] = new NodeList();
+        }
+        for (int[] edge : red_edges) {
+            adjacent[edge[0]].list.add(new Path(1, edge[1], 0));
+        }
+        for (int[] edge : blue_edges) {
+            adjacent[edge[0]].list.add(new Path(-1, edge[1], 0));
+        }
+        
+        Queue<Path> queue = new LinkedList();
+        for (Path p : adjacent[0].list) {
+            p.path = 1;
+            if (answer[p.next] == -1) {
+                answer[p.next] = p.path;
+            }
+            queue.offer(new Path(p));
+        }
+        Path tmp;
+        while (!queue.isEmpty()) {
+            tmp = queue.poll();
+            for (Path p : adjacent[tmp.next].list) {
+                if (p.path != 0 || p.color == tmp.color) {
+                    continue;
+                }
+                p.path = tmp.path + 1;
+                if (answer[p.next] == -1) {
+                    answer[p.next] = p.path;
+                }
+                queue.offer(new Path(p));
+            }
+        }
+        
+        return answer;
+    }
+    
+    class Path {
+        int color, next, path;
+        public Path(int c, int n, int p) {
+            color = c;
+            next = n;
+            path = p;
+        }
+        
+        public Path(Path p) {
+            color = p.color;
+            next = p.next;
+            path = p.path;
+        }
+    }
+
+    class NodeList {
+        LinkedList<Path> list;
+        public NodeList() {
+            list = new LinkedList<Path>();
+        }
+    }
+}
