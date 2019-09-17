@@ -1,0 +1,23 @@
+关键：若z为x和y的最大公约数的倍数，则根据裴蜀定理存在ax + by = z，若z <= x + y，除了x + y = z的情况，其他情况下a,b异号。（fuck，谁想得到这个古埃及/
+古希腊/古巴比伦/古迦勒底水壶问题这么解）
+
+https://leetcode-cn.com/problems/water-and-jug-problem/
+
+class Solution {
+    public boolean canMeasureWater(int x, int y, int z) {
+        if (x + y < z) return false;
+        if (x == z || y == z || x + y == z) return true;
+        
+        return z % GCD(Math.max(x, y), Math.min(x, y)) == 0;
+    }
+    
+    int GCD(int x, int y) {
+        int temp;
+        while (y != 0) {
+            temp = x % y;
+            x = y;
+            y = temp;
+        }
+        return x;
+    }
+}
