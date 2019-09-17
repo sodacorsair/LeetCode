@@ -1,0 +1,60 @@
+https://leetcode-cn.com/problems/valid-tic-tac-toe-state/submissions/
+
+class Solution {
+    public boolean validTicTacToe(String[] board) {
+        int xNum = 0, oNum = 0, xWin = 0, oWin = 0;
+        int xTemp = 0, oTemp = 0;
+        for (int i = 0; i < 3; i++) {
+            xTemp = 0;
+            oTemp = 0;
+            for (int j = 0; j < 3; j++) {
+                if (board[i].charAt(j) == 'X') {
+                    xNum++;
+                    xTemp++;
+                } 
+                if (board[i].charAt(j) == 'O') {
+                    oNum++;
+                    oTemp++;
+                }
+            }
+            if (xTemp == 3) xWin++;
+            if (oTemp == 3) oWin++;
+        }
+        for (int i = 0; i < 3; i++) {
+            xTemp = 0;
+            oTemp = 0;
+            for (int j = 0; j < 3; j++) {
+                if (board[j].charAt(i) == 'X') {
+                    xTemp++;
+                }
+                if (board[j].charAt(i) == 'O') {
+                    oTemp++;
+                }
+            }
+            if (xTemp == 3) xWin++;
+            if (oTemp == 3) oWin++;
+        }
+        
+        xTemp = 0;
+        oTemp = 0;
+        for (int i = 0; i < 3; i++) {
+            if (board[i].charAt(i) == 'X') xTemp++;
+            if (board[i].charAt(i) == 'O') oTemp++;
+        }
+        if (xTemp == 3) xWin++;
+        if (oTemp == 3) oWin++;
+        xTemp = 0;
+        oTemp = 0;
+        for (int i = 0; i < 3; i++) {
+            if (board[i].charAt(2 - i) == 'X') xTemp++;
+            if (board[i].charAt(2 - i) == 'O') oTemp++;
+        }
+        if (xTemp == 3) xWin++;
+        if (oTemp == 3) oWin++;
+        
+        return (xWin == 2 && oWin == 0) && (xNum - oNum == 1) ||
+            (xWin == 1 && oWin == 0) && (xNum - oNum == 1) ||
+            (xWin == 0 && oWin == 1) && (xNum == oNum) ||
+            (xWin == 0 && oWin == 0) && (xNum - oNum <= 1 && xNum >= oNum);
+    }
+}
