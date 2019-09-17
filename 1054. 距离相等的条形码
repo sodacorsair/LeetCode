@@ -1,0 +1,42 @@
+关键：将数组中的众数从第0位开始间隔排序，再依次将剩下的数字间隔排序。
+
+https://leetcode-cn.com/problems/distant-barcodes/submissions/
+
+class Solution {
+    public int[] rearrangeBarcodes(int[] barcodes) {
+        if (barcodes == null || barcodes.length <= 2) return barcodes;
+        
+        int len = barcodes.length;
+        int[] answer = new int[len];
+        HashMap<Integer, Integer> hashmap = new HashMap();
+        
+        for (int a : barcodes) {
+            hashmap.put(a, hashmap.getOrDefault(a, 0) + 1);
+        }
+        
+        int max = Integer.MIN_VALUE, maxNum = barcodes[0];
+        for (int a : hashmap.keySet()) {
+            if (max < hashmap.get(a)) {
+                max = hashmap.get(a);
+                maxNum = a;
+            }
+        }
+        
+        int j = 0;
+        while (hashmap.get(maxNum) > 0) {
+            answer[j] = maxNum;
+            j += 2;
+            hashmap.put(maxNum, hashmap.get(maxNum) - 1);
+        }
+        
+        hashmap.remove(maxNum);
+        for (int a : hashmap.keySet()) {
+            for (int temp = hashmap.get(a); temp > 0; j += 2, temp--) {
+                if (j >= len) j = 1;
+                answer[j] = a;
+            }
+        }
+        
+        return answer;
+    }
+}
