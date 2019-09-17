@@ -1,0 +1,85 @@
+https://leetcode-cn.com/problems/validate-binary-search-tree/solution/
+
+解法1：isValid = isValid(left) && isValid(right) && left.max < val && val < right.min
+
+class Solution {
+    public boolean isValidBST(TreeNode root) {
+        return root == null || isValidSubTree(root).isValid;
+    }
+    
+    SubTree isValidSubTree(TreeNode root) {
+        SubTree sb = new SubTree(), leftSb, rightSb;
+        ArrayList<Integer> mins = new ArrayList(), maxs = new ArrayList();
+        boolean isValid = true;
+        if (root.left != null) {
+            leftSb = isValidSubTree(root.left);
+            mins.add(leftSb.min);
+            maxs.add(leftSb.max);
+            isValid = isValid && leftSb.isValid && root.val > leftSb.max;
+        }
+        if (root.right != null) {
+            rightSb = isValidSubTree(root.right);
+            mins.add(rightSb.min);
+            maxs.add(rightSb.max);
+            isValid = isValid && rightSb.isValid && root.val < rightSb.min;
+        }
+        mins.add(root.val);
+        maxs.add(root.val);
+        int max = Integer.MIN_VALUE, min = Integer.MAX_VALUE;
+        for (int a : mins) {
+            min = Math.min(min, a);
+        }
+        for (int a : maxs) {
+            max = Math.max(max, a);
+        }
+        
+        sb.min = min;
+        sb.max = max;
+        sb.isValid = isValid;
+        return sb;
+    }
+    
+    class SubTree {
+        int min, max;
+        boolean isValid;
+    }
+}
+
+解法2：isValid = (lower == null || val > lower) && (upper == null || val < upper) && isValid(left) && isValid(right)
+
+class Solution {
+    public boolean isValidBST(TreeNode root) {
+        return root == null || helper(root, null, null);
+    }
+    
+    boolean helper(TreeNode root, Integer lower, Integer upper) {
+        return (lower == null || root.val > lower) &&
+            (upper == null || root.val < upper) &&
+            (root.left == null || helper(root.left, lower, root.val)) &&
+            (root.right == null || helper(root.right, root.val, upper));
+    }
+}
+
+解法3：BST中序遍历序列是一个单调序列，这里注意用迭代方式中序遍历时将右侧链非空节点压入栈中，弹出节点访问，在将指针指向左子树根节点，不能压入栈中。
+若左子树节点为空，此时不会有右侧链压入，弹出的就是空节点的父节点。
+
+class Solution {
+    
+  public boolean isValidBST(TreeNode root) {
+      Stack<TreeNode> stack = new Stack();
+      long now = Long.MAX_VALUE;
+      
+      while (!stack.isEmpty() || root != null) {
+          while (root != null) {
+              stack.push(root);
+              root = root.right;
+          }
+          root = stack.pop();
+          if (root.val >= now) return false;
+          now = root.val;
+          root = root.left;
+      }
+      
+      return true;
+  }
+}
