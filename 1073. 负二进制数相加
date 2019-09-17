@@ -16,7 +16,7 @@ class Solution {
         Collections.reverse(ar1);
         Collections.reverse(ar2);
         
-        int maxLen = 5 + Math.max(ar1.size(), ar2.size());
+        int maxLen = 2 + Math.max(ar1.size(), ar2.size());
         for (int i = ar1.size(); i < maxLen; i++) {
             ar1.add(0);
         }
