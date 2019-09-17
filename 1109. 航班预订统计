@@ -1,0 +1,23 @@
+关键：使用差分函数，差分函数的定义为diff[i] = a[i] - a[i - 1],对于a[0]有diff[0] = a[0];所以对于a[i]有a[i] = sum(diff) for 0 to i。若知道对于
+区间[i, j]上任一点均增加n，则diff[i] += n, diff[j + 1] -= n。
+
+https://leetcode-cn.com/problems/corporate-flight-bookings/submissions/
+
+class Solution {
+    public int[] corpFlightBookings(int[][] bookings, int n) {
+        int[] diff = new int[n];
+        
+        for (int[] booking : bookings) {
+            diff[booking[0] - 1] += booking[2];
+            if (booking[1] < n) {
+                diff[booking[1]] -= booking[2];
+            }
+        }
+        
+        for (int i = 1; i < diff.length; i++) {
+            diff[i] += diff[i - 1];
+        }
+        
+        return diff;
+    }
+}
