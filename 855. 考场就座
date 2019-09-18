@@ -1,0 +1,43 @@
+思路：使用BBST维持log(n)的插入和搜索时间复杂度。dist首先拿到students.first()是得到最左边到第一个点的距离，dist = N - 1 - students.last()是得到
+最右端到最后一个点的距离。
+
+https://leetcode-cn.com/problems/exam-room/submissions/
+
+class ExamRoom {
+    
+    TreeSet<Integer> students;
+    int N;
+
+    public ExamRoom(int N) {
+        this.N = N;
+        students = new TreeSet();
+    }
+    
+    public int seat() {
+        int student = 0;
+        
+        if (students.size() > 0) {
+            int dist = students.first();
+            Integer prev = null;
+            for (int s : students) {
+                if (prev != null) {
+                    int d = (s - prev) / 2;
+                    if (d > dist) {
+                        dist = d;
+                        student = prev + d;
+                    }
+                }
+                prev = s;
+            }
+            
+            if (N - 1 - students.last() > dist) student = N - 1;
+        }
+        
+        students.add(student);
+        return student;
+    }
+    
+    public void leave(int p) {
+        students.remove(p);
+    }
+}
