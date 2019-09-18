@@ -1,0 +1,56 @@
+思路：并查集，之前用了个字典方法应该也可以，申诉ING...
+
+https://leetcode-cn.com/problems/accounts-merge/submissions/
+
+class Solution {
+    public List<List<String>> accountsMerge(List<List<String>> accounts) {
+        int[] parents = new int[accounts.size()];
+        for (int i = 0; i < parents.length; i++) {
+            parents[i] = i;
+        }
+        
+        // 合并不同邮箱的父节点的所属集合。先命中的邮箱的集合成为后命中邮箱的集合的子集。
+        HashMap<String, Integer> owners = new HashMap();
+        for (int i = 0; i < accounts.size(); i++) {
+            for (int j = 1; j < accounts.get(i).size(); j++) {
+                String email = accounts.get(i).get(j);
+                if (owners.containsKey(email)) {
+                    int person = owners.get(email);
+                    int p1 = findParent(parents, i);
+                    int p2 = findParent(parents, person);
+                    parents[p2] = p1;
+                } else {
+                    owners.put(email, i);
+                }
+            }
+        }
+        
+        // 将email插入同一父亲的BBST，Java自带的TreeSet自动去重。
+        HashMap<Integer, TreeSet<String>> users = new HashMap();
+        for (int i = 0; i < accounts.size(); i++) {
+            List<String> emails = accounts.get(i);
+            int parent = findParent(parents, i);
+            users.putIfAbsent(parent, new TreeSet());
+            users.get(parent).addAll(emails.subList(1, emails.size()));
+        }
+        
+        // 然后将users上的数据转入最后的数据结构。
+        List<List<String>> res = new ArrayList<List<String>>();
+        for (int idx : users.keySet()) {
+            String name = accounts.get(idx).get(0);
+            List<String> emails = new ArrayList(users.get(idx));
+            emails.add(0, name);
+            res.add(emails);
+        }
+        
+        return res;
+    }
+    
+    int findParent(int[] parents, int idx) {
+        while (parents[idx] != idx) {
+            parents[idx] = parents[parents[idx]];
+            idx = parents[idx];
+        }
+        return idx;
+    }
+}
