@@ -1,0 +1,24 @@
+关键：对于A而言能发出邀请的B满足的条件为0.5 * A + 7 < B <= A。第三个条件B <= 100 || A >= 100，由于A >= B总是成立（若B <= 100时 A >= B肯定成立；
+若 B > 100时，A >= B > 100 ==> A >= 100）。建立一个水桶数组进行计数，再建立一个前缀和数组，A从15开始（由线性规划可得），减去A / 2 + 7的前缀和，再
+减去1（每个数不能向自身发送邀请），最好乘以本水桶计数。
+
+https://leetcode-cn.com/problems/friends-of-appropriate-ages/
+
+class Solution {
+    public int numFriendRequests(int[] ages) {
+        int[] ageInNum = new int[121], ageInSum = new int[121];
+        
+        for (int age : ages)
+            ageInNum[age]++;
+        for (int i = 1; i < 121; i++)
+            ageInSum[i] = ageInSum[i - 1] + ageInNum[i];
+        
+        int res = 0;
+        for (int i = 15; i < 121; i++) {
+            int count = ageInSum[i] - ageInSum[i / 2 + 7] - 1;
+            res += count * ageInNum[i];
+        }
+        
+        return res;
+    }
+}
