@@ -1,0 +1,21 @@
+思路：单调栈。力扣测评是不是有病，最后一个测例这个写法死活过不去，另一个时间长的居然判过，什么鬼……
+
+https://leetcode-cn.com/problems/online-stock-span/submissions/
+
+class StockSpanner {
+    Stack<int[]> stack;
+
+    public StockSpanner() {
+        index = 1;
+        stack = new Stack();
+    }
+    
+    public int next(int price) {
+        int span = 1;
+        while (!stack.isEmpty() && stack.peek()[1] <= price)
+            stack.pop();
+        int span = stack.isEmpty() ? index : index - stack.peek()[0];
+        stack.push(new int[]{span, price});
+        return span;
+    }
+}
