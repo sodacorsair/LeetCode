@@ -1,0 +1,49 @@
+思路：每个陆地点压入队列进行bfs
+
+https://leetcode-cn.com/problems/as-far-from-land-as-possible/submissions/
+
+import javafx.util.Pair;
+
+class Solution {
+    public int maxDistance(int[][] grid) {
+        int N = grid.length;
+        int[][] map = new int[N + 2][N + 2];
+        Queue<Pair<Integer, Integer>> queue = new LinkedList();
+        
+        for (int i = 0; i < N + 2; i++) {
+            map[0][i] = -1;
+            map[N + 1][i] = -1;
+        }
+        for (int i = 1; i < N + 1; i++) {
+            map[i][0] = -1;
+            map[i][N + 1] = -1;
+            for (int j = 1; j < N + 1; j++) {
+                if (grid[i - 1][j - 1] == 1) {
+                    map[i][j] = 0;
+                    queue.offer(new Pair(i, j));
+                } else {
+                    map[i][j] = -2;
+                }
+            }
+        }
+        
+        if (queue.isEmpty() || queue.size() == N * N) return -1;
+        
+        int dirs[][] = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+        int dist = 0;
+        
+        while (!queue.isEmpty()) {
+            Pair<Integer, Integer> tmp = queue.poll();
+            int x = tmp.getKey(), y = tmp.getValue();
+            for (int[] dir : dirs) {
+                if (map[x + dir[0]][y + dir[1]] == -2) {
+                    map[x + dir[0]][y + dir[1]] = map[x][y] + 1;
+                    dist = map[x][y] + 1 > dist ? map[x][y] + 1 : dist;
+                    queue.offer(new Pair(x + dir[0], y + dir[1]));
+                }
+            }
+        }
+        
+        return dist;
+    }
+}
