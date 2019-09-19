@@ -1,0 +1,22 @@
+思路：使用Kadane算法，对于数组a，记以a[i]为结尾的最大子数组和为c[i]，有递推公式c[i] = max(c[i - 1] + a[i], a[i])，该公式显然正确，因为以a[i]为结尾
+的最大子数组和首先要和c[i - 1]代表的数组连缀，或者只有a[i]，所以c[i]便为二者最大值。数组c记录了以a[i]为结尾的最大子数组，只需遍历一遍便可得到a的最大
+子数组。在本题中a是一个环形数组，可能存在中间贯穿结尾和开头的子数组，此时若该子数组最大，则中间的子数组便为最小子数组，只需用Kadane算法算出即可。值得
+注意的是，本题不允许出现空子数组，若数组元素全为负数，则应返回其中的最大元素。此时c[i] = a[i]，只需知道c[i]的正负便可知道该数组是否为全负数组。
+
+https://leetcode-cn.com/problems/maximum-sum-circular-subarray/submissions/
+
+class Solution {
+    public int maxSubarraySumCircular(int[] A) {
+        int maxSum = Integer.MIN_VALUE, minSum = Integer.MAX_VALUE, curMax = 0, curMin = 0, total = 0;
+        
+        for (int a : A) {
+            curMax = Math.max(curMax + a, a);
+            curMin = Math.min(curMin + a, a);
+            maxSum = Math.max(maxSum, curMax);
+            minSum = Math.min(minSum, curMin);
+            total += a;
+        }
+        
+        return maxSum <= 0 ? maxSum : Math.max(maxSum, total - minSum);
+    }
+}
