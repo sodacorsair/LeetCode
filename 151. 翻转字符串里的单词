@@ -1,0 +1,43 @@
+https://leetcode-cn.com/problems/reverse-words-in-a-string/
+
+这题通过率怎么这么低。。。。。。
+class Solution {
+    public String reverseWords(String s) {
+        String sb = "", ans = "";
+        List<String> list = new ArrayList();
+        boolean isChar = false;
+        
+        for (int i = 0; i < s.length(); i++) {
+            char ch = s.charAt(i);
+            if (ch != ' ') {
+                if (isChar) sb += ch;
+                else {
+                    sb = "";
+                    sb += ch;
+                    isChar = true;
+                }
+            } else {
+                if (isChar) {
+                    list.add(sb);
+                    isChar = false;
+                }
+            }
+        }
+        
+        if (isChar) list.add(sb);
+        for (int i = list.size() - 1; i >= 0; i--)
+            ans += list.get(i) + " ";
+        
+        return ans == "" ? ans : ans.substring(0, ans.length() - 1);
+    }
+}
+
+用Java api的日天派。。。。。。
+class Solution {
+    public String reverseWords(String s) {
+        String[] words = s.trim().split(" +");
+        Collections.reverse(Arrays.asList(words));
+        return String.join(" ", words);
+    }
+}
+
