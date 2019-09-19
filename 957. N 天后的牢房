@@ -1,0 +1,17 @@
+思路：用一个字典存储牢房状态，由于牢房状态最多只有64种，故循环一定小于等于64。评论区赵4找到最大循环为14，只需用(N - 1) % 14 + 1更新N就可以了。
+
+https://leetcode-cn.com/problems/prison-cells-after-n-days/submissions/
+
+class Solution {
+    public int[] prisonAfterNDays(int[] cells, int N) {
+        N = N == 0 ? 0 : (N - 1) % 14 + 1;
+        for (int i = 1; i <= N; i++) {
+            int[] cells2 = new int[cells.length];
+            for (int j = 1; j < 7; j ++) 
+                cells2[j] = (cells[j - 1] ^ cells[j + 1]) == 0 ? 1 : 0;
+            cells = cells2;
+        }
+        
+        return cells;
+    }
+}
