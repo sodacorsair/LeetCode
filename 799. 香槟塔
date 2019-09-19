@@ -1,0 +1,15 @@
+思路：第i层的第j杯酒res[j] += res[j - 1] = min(0, (res[j - 1] - 1) / 2)，评论区的赵4把条件弄错了，但问题不大，因为第row层的第row+1杯酒虽然不存在，
+但由于第row杯酒本身是0，所以可以AC。。。。。。
+
+https://leetcode-cn.com/problems/champagne-tower/submissions/
+
+class Solution {
+    public double champagneTower(int poured, int query_row, int query_glass) {
+        double[] res = new double[query_row + 1];
+        res[0] = poured;
+        for (int i = 1; i <= query_row; i++) 
+            for (int j = i - 1; j >= 0; j--) 
+                res[j + 1] += res[j] = Math.max(0.0, (res[j] - 1) / 2);
+        return Math.min(1.0, res[query_glass]);
+    }
+}
