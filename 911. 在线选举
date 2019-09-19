@@ -1,0 +1,31 @@
+思路：用BBST存储每一时刻的冠军，用二分搜索快速定位<=t的最大值，取出该时刻的冠军。
+
+https://leetcode-cn.com/problems/online-election/submissions/
+
+class TopVotedCandidate {
+    TreeMap<Integer, Integer> record;
+    int[] votes;
+    int maxVote;
+    int champion;
+
+    public TopVotedCandidate(int[] persons, int[] times) {
+        record = new TreeMap();
+        votes = new int[persons.length + 1];
+        maxVote = 0;
+        champion = persons[0];
+        
+        for (int i = 0; i < persons.length; i++) {
+            int person = persons[i];
+            votes[person]++;
+            if (votes[person] >= maxVote) {
+                champion = person;
+                maxVote = votes[person];
+            }
+            record.put(times[i], champion);
+        }
+    }
+    
+    public int q(int t) {
+        return record.floorEntry(t).getValue();
+    }
+}
