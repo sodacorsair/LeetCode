@@ -1,0 +1,33 @@
+思路：设len[i]为以a[i]结尾的最长递增子序列长度，cnt[i]为该子序列的个数，通过遍历以下标0 <= j < i 结尾的子序列，有当a[i] > a[j] 时，若len[i] ==
+len[j] + 1，则cnt[i] = cnt[i] + cnt[j]，长度相等只需将该序列的个数加上；若len[i] < len[j] + 1，则更新len[i] = len[j] + 1，cnt[i] = cnt[j]。
+一开始初始化为1，因为最小增长子序列长度个数和长度皆为1。
+
+https://leetcode-cn.com/problems/number-of-longest-increasing-subsequence/submissions/
+
+class Solution {
+    public int findNumberOfLIS(int[] nums) {
+        int[] len = new int[nums.length], cnt = new int[nums.length];
+        int maxLen = 0, res = 0;
+        
+        for (int i = 0; i < nums.length; i++) {
+            len[i] = cnt[i] = 1;
+            for (int j = 0; j < i; j++) {
+                if (nums[i] > nums[j]) {
+                    if (len[j] + 1 == len[i]) cnt[i] += cnt[j];
+                    else if (len[j] + 1 > len[i]) {
+                        len[i] = len[j] + 1;
+                        cnt[i] = cnt[j];
+                    }
+                }
+            }
+            
+            if (maxLen == len[i]) res += cnt[i];
+            else if (maxLen < len[i]) {
+                maxLen = len[i];
+                res = cnt[i];
+            }
+        }
+        
+        return res;
+    }
+}
