@@ -1,0 +1,26 @@
+思路：假设 c[i] 是以第i个字符为结尾时的最长无重复字符串长度，用一个数组或者字典保存字符出现的最近位置,这里用p[c]代表字符c出现的最近位置。
+显然 c[0] = 1, 当下标为 i 时，有两种情况：若字符 s[i] 没出现或者字符s[i]出现但 i - p[s[i]] > c[i - 1] + 1，则 c[i] = c[i - 1] + 1;否则 c[i] = i - p[s[i]]。
+遍历一遍数组c就得到答案。
+这个是拿Kadane算法改的，看了评论区才知道还有滑动窗口这个东西……
+
+https://leetcode-cn.com/problems/longest-substring-without-repeating-characters/
+
+class Solution {
+    public int lengthOfLongestSubstring(String s) {
+        if (s == null || s.length() == 0) return 0;
+        int[] appear = new int[95];
+        int cur = 0, global = 0;
+        
+        for (int i = 0; i < 95; i++)
+            appear[i] = -1;
+        
+        for (int i = 0; i < s.length(); i++) {
+            int c = s.charAt(i) - ' ';
+            cur = appear[c] == -1 ? cur + 1 : Math.min(cur + 1, i - appear[c]);
+            appear[c] = i;
+            global = Math.max(global, cur);
+        }
+        
+        return global;
+    }
+}
