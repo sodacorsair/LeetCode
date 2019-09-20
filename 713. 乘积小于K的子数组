@@ -1,0 +1,16 @@
+思路：维护一个滑动窗口[i, j]，初始化为[0, 0]，当滑动窗口内乘积小于K或者i > j退出，在当前坐标下计算出以该坐标为结尾的子数组个数j - i + 1。
+
+https://leetcode-cn.com/problems/subarray-product-less-than-k/submissions/
+
+class Solution {
+    public int numSubarrayProductLessThanK(int[] nums, int k) {
+        int res = 0, product = 1;
+        for (int i = 0, j = 0; j < nums.length; j++) {
+            product *= nums[j];
+            while (product >= k && i <= j) 
+                product /= nums[i++];
+            res += j - i + 1;
+        }
+        return res;
+    }
+}
