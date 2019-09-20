@@ -1,0 +1,31 @@
+思路：第一个数小于整个数长度的一半，前两个数的长度都要小于等于和的长度，确定前两个数后，就可以得到s = a + b, 之后 b = a, 检验 s 是否是剩余子串
+num[i + j, num.length()) 开头的部分。
+
+https://leetcode-cn.com/problems/additive-number/submissions/
+
+import java.math.BigInteger;
+
+class Solution {
+    public boolean isAdditiveNumber(String num) {
+        int L = num.length();
+        
+        for (int i = 1; i <= L / 2; i++) {
+            if (num.charAt(0) == '0' && i >= 2) break;
+             for (int j = 1; Math.max(i, j) <= L - i - j; j++) {
+                 if (num.charAt(i) == '0' && j >= 2) break;
+                 BigInteger num1 = new BigInteger(num.substring(0, i));
+                 BigInteger num2 = new BigInteger(num.substring(i, i + j));
+                 String sum;
+                 int start;
+                 for (start = i + j; start < num.length(); start += sum.length()) {
+                     num2 = num2.add(num1);
+                     num1 = num2.subtract(num1);
+                     sum = num2.toString();
+                     if (!num.startsWith(sum, start)) break;
+                 }
+                 if (start == num.length()) return true;
+            }
+        }   
+        return false;
+    }
+}
