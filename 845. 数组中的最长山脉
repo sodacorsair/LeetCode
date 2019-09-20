@@ -1,0 +1,52 @@
+思路：每次遍历得到当前山脉最大长度，山脉长度为0和大于等于3时分开讨论。
+
+https://leetcode-cn.com/problems/longest-mountain-in-array/submissions/
+
+class Solution {
+    public int longestMountain(int[] a) {
+        int maxRange = 0, range = 0, slope = 1;
+        for (int i = 1; i < a.length; i++) {
+            if (range >= 3) {
+                if (a[i] < a[i - 1]) {
+                    range++;
+                } else {
+                    if (a[i] == a[i - 1]) {
+                        slope = 1;
+                    } else {
+                        slope = 2;
+                    }
+                    range = 0;
+                }
+            } else {
+                if (a[i] > a[i - 1]) {
+                    slope++;
+                } else {
+                    if (a[i] < a[i - 1]) {
+                        if (slope >= 2) {
+                            range = slope + 1;
+                        }
+                    }
+                    slope = 1;
+                }
+            }
+            maxRange = Math.max(maxRange, range);
+        }
+        return maxRange;
+    }
+}
+
+另一种解法：遍历三遍，第一遍得到每个点的下坡数，第二遍得到每个点的上坡数，第三遍如果该点下坡数和上坡数都大于0，则上坡数+下坡数+1即为当前点的山脉长度。
+
+class Solution {
+    public int longestMountain(int[] a) {
+        int max = 0, up = 0, N = a.length;
+        int[] down = new int[N];
+        for (int i = N - 2; i >= 1; i--)
+            down[i] = a[i] > a[i + 1] ? down[i + 1] + 1 : 0;
+        for (int i = 1; i <= N - 2; i++) {
+            up = a[i] > a[i - 1] ? up + 1 : 0;
+            max = (up > 0 && down[i] > 0) ? Math.max(up + down[i] + 1, max) : max;
+        }
+        return max;
+    }
+}
