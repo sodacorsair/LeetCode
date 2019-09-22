@@ -1,0 +1,19 @@
+思路：以p[i]代表数组前i个数的和，则当p[i] >= S时，只需知道p[p[i] - S]出现的次数即可，因为p[0]代表的前0个数的和为0，需初始化count[0] = 1。
+
+https://leetcode-cn.com/problems/binary-subarrays-with-sum/submissions/
+
+class Solution {
+    public int numSubarraysWithSum(int[] A, int S) {
+        int ans = 0, preSum = 0;
+        int[] count = new int[A.length + 1];
+        count[0] = 1;
+        
+        for (int a : A) {
+            preSum += a;
+            ans = preSum >= S ? ans + count[preSum - S] : ans;
+            count[preSum]++;
+        }
+        
+        return ans;
+    }
+}
