@@ -1,0 +1,27 @@
+思路：从后向前找到第一个小于右边邻居的数，再将该数和右边的递减序列从后向前进行找到第一个比该数大的数字进行交换，交换之后该递减序列左右翻转。
+（14世纪数学家Narayana Pandita提出相同思想的算法，本人半小时独立想出来该解法，英雄所见略同，铃铛敲锣鼓想一块去了……）
+
+https://leetcode-cn.com/problems/possible-bipartition/
+
+class Solution {
+    public void nextPermutation(int[] nums) {
+        int i = nums.length - 2, len = nums.length;
+        for (; i >= 0; i--)
+            if (nums[i] < nums[i + 1]) break;
+       
+        if (i != -1)
+            for (int j = len - 1; j > i; j--)
+                if (nums[j] > nums[i]) {
+                    int tmp = nums[i];
+                    nums[i] = nums[j];
+                    nums[j] = tmp;
+                    break;
+                }
+        
+        for (int j = 1; j <= (len - i - 1) / 2; j++) {
+            int tmp = nums[j + i];
+            nums[j + i] = nums[len - j];
+            nums[len - j] = tmp;
+        }
+    }
+}
