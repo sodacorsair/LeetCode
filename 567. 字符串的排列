@@ -1,0 +1,37 @@
+思路：滑动窗口
+
+https://leetcode-cn.com/problems/permutation-in-string/submissions/
+
+class Solution {
+    public boolean checkInclusion(String s1, String s2) {
+        int[] counts = new int[26], cur = new int[26];
+        int hits = 0, first = 0;
+        
+        for (int i = 0; i < s1.length(); i++)
+            counts[s1.charAt(i) - 'a']++;
+        
+        for (int i = 0; i < s2.length(); i++) {
+            int c = s2.charAt(i) - 'a';
+            if (counts[c] == 0) {
+                hits = 0;
+                cur = new int[26];
+            } else if (cur[c] + 1 > counts[c]) {
+                while (s2.charAt(first) - 'a' != c && first < i) {
+                    cur[s2.charAt(first) - 'a']--;
+                    first++;
+                    hits--;
+                }
+                first++;
+            } else {
+                if (hits == 0) first = i;
+                cur[c]++;
+                hits++;
+            }
+            if (hits == s1.length()) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+}
