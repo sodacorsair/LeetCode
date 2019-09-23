@@ -1,0 +1,19 @@
+思路：当n为偶数时，只需除以2；当n为奇数时，n有两种情况:n = 4k+1，n = 4k+3，前者减1或后者加1成为4的倍数是步数最少的方法。3由于不满足前两种情况，需要
+单独讨论，3变成1需要两步。
+
+https://leetcode-cn.com/problems/integer-replacement/submissions/
+
+class Solution {
+    public int integerReplacement(int n) {
+        if (n == Integer.MAX_VALUE) return 32;
+        int count = 0;
+        while (n > 1) {
+            if (n % 2 == 0) n /= 2;
+            else if ((n + 1) % 4 == 0 && n != 3) n++;
+            else n--;
+            count++;
+        }
+        
+        return count;
+    }
+}
