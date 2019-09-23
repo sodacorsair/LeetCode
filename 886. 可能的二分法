@@ -1,0 +1,37 @@
+思路：对每个点使用bfs（图可能存在不连通的子图），将相邻的节点涂成不同颜色，若相邻节点出现同色则不存在该二分法。
+
+https://leetcode-cn.com/problems/possible-bipartition/submissions/
+
+class Solution {
+    public boolean possibleBipartition(int N, int[][] dislikes) {
+        List<List<Integer>> map = new ArrayList();
+        int[] visited = new int[N + 1];
+        
+        for (int i = 0; i <= N; i++) map.add(new ArrayList());
+        
+        for (int[] a : dislikes) {
+            map.get(a[0]).add(a[1]);
+            map.get(a[1]).add(a[0]);
+        }
+        
+        for (int i = 1; i <= N; i++) {
+            if (visited[i] == 0) {
+                Queue<Integer> queue = new LinkedList();
+                queue.offer(i);
+                visited[i] = 1;
+                while (!queue.isEmpty()) {
+                    int tmp = queue.poll();
+                    for (int a : map.get(tmp)) {
+                        if (visited[a] == visited[tmp]) return false;
+                        if (visited[a] == 0) {
+                            visited[a] = -visited[tmp];
+                            queue.offer(a);
+                        }
+                    }
+                }
+            }
+        }
+        
+        return true;
+    }
+}
