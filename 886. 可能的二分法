@@ -35,3 +35,34 @@ class Solution {
         return true;
     }
 }
+
+并查集解法：将自己讨厌的扔进 i + N 那一堆里，然后查自己被别人扔到哪一堆里，当这些垃圾堆不相交时可以分成两堆。
+
+class Solution {
+    int[] fathers;
+    
+    public boolean possibleBipartition(int N, int[][] dislikes) {
+        fathers = new int[2 * N + 1];
+        for (int i = 0; i < fathers.length; i++) fathers[i] = i;
+        
+        for (int[] d : dislikes) {
+            int x = find(d[0]);
+            int y = find(d[1]);
+            int a = find(d[0] + N);
+            int b = find(d[1] + N);
+            if (x == y) return false;
+            else {
+                fathers[a] = y;
+                fathers[b] = x;
+            }
+        }
+        
+        return true;
+    }
+    
+    private int find(int son) {
+        if (son != fathers[son])
+            fathers[son] = find(fathers[son]);
+        return fathers[son];
+    }
+}
