@@ -12,11 +12,6 @@ https://leetcode-cn.com/problems/maximum-width-ramp/submissions/
 在#901中寻找股票价格最大跨度，实质是对于下标i，找到一个全体小于等于A[i]并且要求最长的左边相邻区间，这时应选用第二种单调栈。弹栈直到找到第一个大于A[i]的
 索引s[j - 1]，此时右边的s[j]是小于等于A[i]并且保证(s[j - 1], i]均满足其性质的索引。
 
-作者：shua-ti-wang-4
-链接：https://leetcode-cn.com/problems/maximum-width-ramp/solution/dan-diao-zhan-jian-dan-li-jie-by-shua-ti-wang-4/
-来源：力扣（LeetCode）
-著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
-
 class Solution {
     public int maxWidthRamp(int[] A) {
         Stack<Integer> stack = new Stack();
