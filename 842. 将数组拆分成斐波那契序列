@@ -1,0 +1,42 @@
+思路：思路类似于#306.累加数，需要注意的是，第一个数和第二个数确定后整个序列也确定了。由于i是第一个数的尾烧饼，需要小于等于长度的一半（提早结束会测试
+用例报错）；利用parseLong转成长整型数判断是否溢出，然后再将长整型数存储在整型数中；要注意num1要在内循环开始再被初始化一遍。
+
+https://leetcode-cn.com/problems/split-array-into-fibonacci-sequence/submissions/
+
+class Solution {
+    public List<Integer> splitIntoFibonacci(String S) {
+        ArrayList<Integer> ans = new ArrayList();
+        int len = S.length();
+        
+        for (int i = 1; i <= len / 2; i++) {
+            if (S.charAt(0) == '0' && i > 1) break;
+            long tmp1 = Long.parseLong(S.substring(0, i));
+            if (tmp1 > Integer.MAX_VALUE) break;
+            ans.add((int)tmp1);
+            for (int j = 1; Math.max(i, j) <= len - i - j; j++) {
+                if (S.charAt(i) == '0' && j > 1) break;
+                long tmp2 = Long.parseLong(S.substring(i, i + j));
+                if (tmp2 > Integer.MAX_VALUE) break;
+                int num1 = (int)tmp1;
+                int num2 = (int)tmp2;
+                ans.add(num2);
+                String sum;
+                int start;
+                for (start = i + j; start < len; start += sum.length()) {
+                    num2 = num1 + num2;
+                    num1 = num2 - num1;
+                    sum = String.valueOf(num2);
+                    if (!S.startsWith(sum, start)) {
+                        break;
+                    }
+                    ans.add(num2);
+                }
+                if (len == start) return ans;
+                for (int idx = ans.size() - 1; idx >= 1; idx--) ans.remove(idx);
+            }
+            ans.remove(0);
+        }
+        
+        return ans;
+    }
+}
