@@ -1,0 +1,29 @@
+好阴啊，还得排序……
+
+https://leetcode-cn.com/problems/find-and-replace-in-string/submissions/
+
+class Solution {
+    public String findReplaceString(String S, int[] indices, String[] sources, String[] targets) {
+        int[] map = new int[S.length()];
+        for (int i = 0; i < indices.length; i++)
+            map[indices[i]] = i;
+        Arrays.sort(indices);
+        
+        for (int i = targets.length - 1; i >= 0; i--) {
+            String src = sources[map[indices[i]]];
+            int begin = indices[i], end = indices[i] + src.length();
+            boolean flag = true;
+            for (int j = 0; j < src.length(); j++)
+                if (S.charAt(begin + j) != src.charAt(j)) {
+                    flag = false;
+                    break;
+                }
+            
+            if (flag) {
+                S = S.substring(0, begin) + targets[map[indices[i]]] + S.substring(end);
+            }
+        }
+        
+        return S;
+    }
+}
