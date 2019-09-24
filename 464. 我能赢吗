@@ -1,0 +1,30 @@
+思路：使用dfs搜索，使用bitmap表示一个状态（e.g. 01001，表示第二个和第五个数字已使用），将状态保存在字典中，dfs模仿两人玩游戏过程。
+
+https://leetcode-cn.com/problems/can-i-win/solution/
+
+class Solution {
+    Map<Integer, Boolean> map;
+    int max;
+    
+    public boolean canIWin(int maxChoosableInteger, int desiredTotal) {
+        if (desiredTotal <= maxChoosableInteger) return true;
+        int sum = (1 + maxChoosableInteger) * maxChoosableInteger / 2;
+        if (sum < desiredTotal) return false;
+        map = new HashMap();
+        max = maxChoosableInteger;
+        return dfs(0, desiredTotal);
+    }
+    
+    private boolean dfs(int used, int desiredTotal) {
+        if (map.containsKey(used)) return map.get(used);
+        for (int i = max, bit = 1; i >= 1; i--, bit <<= 1) {
+            if ((used & bit) != 0) continue;
+            if (i >= desiredTotal || !dfs(used | bit, desiredTotal - i)) {
+                map.put(used, true);
+                return true;
+            }
+        }
+        map.put(used, false);
+        return false;
+    } 
+}
