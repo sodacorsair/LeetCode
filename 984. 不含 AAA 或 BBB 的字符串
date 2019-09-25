@@ -1,0 +1,40 @@
+思路：假设多字符为M，少字符为N，若M > N，先排列MMN，否则排列MN，这样可能会有剩余的M，加上即可。
+
+https://leetcode-cn.com/problems/string-without-aaa-or-bbb/submissions/
+
+class Solution {
+    public String strWithout3a3b(int A, int B) {
+        String sc = "", bc = "", ans = "";
+        int small, big;
+        if (A <= B) {
+            small = A;
+            sc = "a";
+            big = B;
+            bc = "b";
+        } else {
+            small = B;
+            sc = "b";
+            big = A;
+            bc = "a";
+        }
+        
+        while (small > 0 && big > 0) {
+            if (big > small) {
+                big -= 2;
+                small--;
+                ans = ans + bc + bc + sc;
+            } else {
+                big--;
+                small--;
+                ans = ans + bc + sc;
+            }
+        }
+        
+        while (big > 0) {
+            big--;
+            ans += bc;
+        }
+        
+        return ans;
+    }
+}
