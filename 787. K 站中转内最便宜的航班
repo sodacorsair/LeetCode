@@ -1,0 +1,30 @@
+思路：限定K+1步的单源最短路径问题，需要改造Dijkstra算法，将原来优先队列里只保留最短路径的已发现的点改造为也接纳所有不同长度路径的已发现的点。很容易得知
+此时优先队列中仍然是按照路径长度排列，短路径点比长路径点先出队，若短路径点符合要求不影响结果；若不符合要求，需要下一个路径长但中转数的点顶上去。
+
+https://leetcode-cn.com/problems/cheapest-flights-within-k-stops/submissions/
+
+class Solution {
+    public int findCheapestPrice(int n, int[][] flights, int src, int dst, int K) {
+        Map<Integer, Map<Integer, Integer>> map = new HashMap();
+        for (int[] flight : flights) {
+            map.putIfAbsent(flight[0], new HashMap());
+            map.get(flight[0]).put(flight[1], flight[2]);
+        }
+        
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> (Integer.compare(a[1], b[1])));
+        pq.offer(new int[]{src, 0, K + 1});
+        while (!pq.isEmpty()) {
+            int[] tmp = pq.poll();
+            int city = tmp[0];
+            int price = tmp[1];
+            int stop = tmp[2];
+            if (city == dst) return price;
+            if (stop == 0) continue;
+            Map<Integer, Integer> adj = map.getOrDefault(city, new HashMap());
+            for (int m : adj.keySet())
+                pq.offer(new int[]{m, price + adj.get(m), stop - 1});
+        }
+        
+        return -1;
+    }
+}
