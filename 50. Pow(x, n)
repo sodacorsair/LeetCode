@@ -1,0 +1,30 @@
+思路：老邓讲过的快速幂算法，，，维持一个权重，指数右移，移到哪个乘哪个，，，
+
+https://leetcode-cn.com/problems/powx-n/submissions/
+
+class Solution {
+    public double myPow(double x, int nn) {
+        double ans = 1.0;
+        boolean flag = true;
+        double p = x;
+        long n = (long)nn;
+        
+        if (n < 0) {
+            flag = false;
+            n = -n;
+        }
+        
+        while (n > 0) {
+            if ((n & 1) == 1)
+                ans *= p;
+            p *= p;
+            n >>= 1;
+        }
+        
+        if (!flag) {
+            ans = 1 / ans;
+        }
+        
+        return ans;
+    }
+}
