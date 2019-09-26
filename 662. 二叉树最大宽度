@@ -1,0 +1,41 @@
+思路：层次遍历，给每个节点编号算出每层的宽度。
+
+https://leetcode-cn.com/problems/maximum-width-of-binary-tree/
+
+class Solution {
+    
+    class Node {
+        TreeNode node;
+        int level, pos;
+        
+        public Node(TreeNode n, int l, int p) {
+            node = n;
+            level = l;
+            pos = p;
+        }
+    }
+    
+    public int widthOfBinaryTree(TreeNode root) {
+        int width = 0, cur = 0, max = 0, first = 1;
+        Queue<Node> queue = new LinkedList();
+        queue.offer(new Node(root, 0, 1));
+        
+        while (!queue.isEmpty()) {
+            Node tmp = queue.poll();
+            if (tmp.level != cur) {
+                max = Math.max(max, width);
+                first = tmp.pos;
+                width = 0;
+                cur = tmp.level;
+            } else {
+                width = tmp.pos - first + 1;
+            }
+            if (tmp.node.left != null)
+                queue.offer(new Node(tmp.node.left, tmp.level + 1, 2 * tmp.pos));
+            if (tmp.node.right != null)
+                queue.offer(new Node(tmp.node.right, tmp.level + 1, 2 * tmp.pos + 1));
+        }
+        
+        return Math.max(width, max);
+    }
+}
