@@ -55,3 +55,54 @@ class Solution {
         arr[b] = temp;
     }
 }
+
+使用随机选取轴枢数的k选择算法：
+
+class Solution {
+    public void wiggleSort(int[] nums) {
+        int n = nums.length;
+        int median = findKthSmallest(nums, (n + 1) / 2);
+        int left = 0, mid = 0, right = n - 1;
+        while (mid <= right) {
+            if (nums[newIndex(mid, n)] < median)
+                swap(nums, newIndex(right--, n), newIndex(mid, n));
+            else if (nums[newIndex(mid, n)] > median)
+                swap(nums, newIndex(left++, n), newIndex(mid++, n));
+            else
+                mid++;
+        }
+    }
+    
+    private int newIndex(int index, int n) {
+        return (1 + 2 * index) % (n | 1);
+    }
+    
+    private int findKthSmallest(int[] nums, int k) {
+        int start = 0, end = nums.length - 1;
+        Random rand = new Random();
+        while (true) {
+            int pivot = nums[start + rand.nextInt(end - start + 1)];
+            int left = start, right = end, mid = start;
+            while (mid <= right) {
+                if (nums[mid] < pivot)
+                    swap(nums, mid++, left++);
+                else if (nums[mid] > pivot)
+                    swap(nums, mid, right--);
+                else
+                    mid++;
+            }
+            if (left <= k - 1 && right >= k - 1)
+                return pivot;
+            else if (left > k - 1)
+                end = left - 1;
+            else
+                start = right + 1;
+        }
+    }
+    
+    private void swap(int[] arr, int a, int b) {
+        int temp = arr[a];
+        arr[a] = arr[b];
+        arr[b] = temp;
+    }
+}
