@@ -1,0 +1,29 @@
+https://leetcode-cn.com/problems/out-of-boundary-paths/submissions/
+
+解法1：直接使用bfs遍历直接超时，时间复杂度和空间复杂度同时高达O(4^N)。采用动态规划，第i步时格子能走到边界的方法数是第(i+1)步时四周格子方法数总和。
+
+class Solution {
+    public int findPaths(int m, int n, int N, int x, int y) {
+        long[][][] dp = new long[N + 1][m][n];
+        for (int k = 1; k <= N; k++)
+            for (int i = 0; i < m; i++)
+                for (int j = 0; j < n; j ++)
+                    dp[k][i][j] = ((i == 0 ? 1 : dp[k - 1][i - 1][j]) + (i == m - 1 ? 1 : dp[k - 1][i + 1][j]) +
+                                   (j == 0 ? 1 : dp[k - 1][i][j - 1]) + (j == n - 1 ? 1 : dp[k - 1][i][j + 1])) % (long)(1e9 + 7);
+        return (int)dp[N][x][y];
+    }
+}
+
+解法2：由于现状态只跟前状态有关，只用保留两维。
+
+class Solution {
+    public int findPaths(int m, int n, int N, int x, int y) {
+        long[][][] dp = new long[2][m][n];
+        while (N-- > 0)
+            for (int i = 0, cur = N % 2, pre = (N + 1) % 2; i < m; i++)
+                for (int j = 0; j < n; j ++)
+                    dp[cur][i][j] = ((i == 0 ? 1 : dp[pre][i - 1][j]) + (i == m - 1 ? 1 : dp[pre][i + 1][j]) +
+                                   (j == 0 ? 1 : dp[pre][i][j - 1]) + (j == n - 1 ? 1 : dp[pre][i][j + 1])) % (long)(1e9 + 7);
+        return (int)dp[0][x][y];
+    }
+}
