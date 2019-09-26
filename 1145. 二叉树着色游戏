@@ -1,0 +1,25 @@
+思路：玩家1染色一个点后，这个点将整棵树分割成三个区域，分别为左子树，右子树，父节点去点掉以该点为树根的子树之后的连通图，其中节点数最大区域大于点数的
+一半即可取胜。
+
+https://leetcode-cn.com/problems/binary-tree-coloring-game/
+
+class Solution {
+    
+    private int left, right;
+    
+    public boolean btreeGameWinningMove(TreeNode root, int n, int x) {
+        count(root, x);
+        return Math.max(left, Math.max(right, n - 1 - left - right)) > n / 2;
+    }
+    
+    private int count (TreeNode root, int x) {
+        if (null == root) return 0;
+        int l = count(root.left, x);
+        int r = count(root.right, x);
+        if (x == root.val) {
+            left = l;
+            right = r;
+        }
+        return l + r + 1;
+    }
+}
