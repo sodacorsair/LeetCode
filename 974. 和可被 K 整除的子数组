@@ -1,0 +1,17 @@
+思路：想半天看了评论区发现同余的之前的前缀和的个数就等于子数组个数，气绝身亡……这么简单怎么没想到……负数的时候要加个K和正数同余。
+
+https://leetcode-cn.com/problems/subarray-sums-divisible-by-k/submissions/
+
+class Solution {
+    public int subarraysDivByK(int[] A, int K) {
+        int res = 0, prefix = 0;
+        int[] count = new int[K];
+        count[0] = 1;
+        for (int a : A) {
+            prefix = (prefix + a % K + K) % K;
+            res += count[prefix]++;
+        }
+        
+        return res;
+    }
+}
