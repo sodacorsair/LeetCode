@@ -1,0 +1,20 @@
+思路：其实就是统计每行的前缀和的个数，穿过的砖块数等于行数减去相同的前缀和的个数，注意要初始化前缀和个数为0，且最后一个前缀和不能计算，当每行只有一个前缀
+和时所有前缀和个数都为0。
+
+https://leetcode-cn.com/problems/brick-wall/submissions/
+
+class Solution {
+    public int leastBricks(List<List<Integer>> walls) {
+        Map<Integer, Integer> count = new HashMap();
+        int res = 0;
+        for (List<Integer> wall : walls) {
+            int prefix = 0;
+            for (int i = 0; i < wall.size() - 1; i++) {
+                prefix += wall.get(i);
+                count.put(prefix, count.getOrDefault(prefix, 0) + 1);
+                res = Math.max(res, count.get(prefix));
+            }
+        }
+        return walls.size() - res;
+    }
+}
