@@ -1,0 +1,22 @@
+思路：Deque的api坑死爹了，push是从头压入栈，pop是从头出队，offer是从尾入队，poll是从头出队，peek是查看头元素！！！Mother Fuck！！！
+
+https://leetcode-cn.com/problems/asteroid-collision/submissions/
+
+class Solution {
+    public int[] asteroidCollision(int[] asteroids) {
+        Deque<Integer> s = new LinkedList();
+        ArrayList<Integer> arr = new ArrayList();
+        for (int a : asteroids) {
+            if (a < 0) {
+                while (!s.isEmpty() && s.peekLast() < -a) s.pollLast();
+                if (s.isEmpty()) arr.add(a);
+                else if (s.peekLast() == -a) s.pollLast();
+            } else 
+                s.offer(a);
+        }
+        while (!s.isEmpty()) arr.add(s.pop());
+        int[] ans = new int[arr.size()];
+        for (int i = 0; i < ans.length; i++) ans[i] = arr.get(i);
+        return ans;
+    }
+}
