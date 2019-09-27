@@ -1,0 +1,25 @@
+思路：判断中值是否和目标值在同侧。二分搜索的边界条件简直噩梦……
+
+https://leetcode-cn.com/problems/search-in-rotated-sorted-array/
+
+class Solution {
+    public boolean search(int[] nums, int target) {
+        if (nums == null || nums.length == 0) return -1;
+        int lo = 0, hi = nums.length - 1;
+        while (lo < hi) {
+            int mid = lo + (hi - lo + 1) / 2;
+            if ((target - nums[nums.length - 1]) * (nums[mid] - nums[nums.length - 1]) > 0) {
+                if (nums[mid] >= target)
+                    hi = mid - 1;
+                else 
+                    lo = mid;
+            }
+            if (target >= nums[0])
+                hi = mid - 1;
+            else
+                lo = mid;
+        }
+        
+        return nums[hi] == target ? hi : -1;
+    }
+}
