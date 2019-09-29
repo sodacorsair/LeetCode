@@ -1,0 +1,26 @@
+https://leetcode-cn.com/problems/minimum-swaps-to-make-sequences-increasing/solution/
+
+class Solution {
+    public int minSwap(int[] A, int[] B) {
+        int N = A.length;
+        int[] swap = new int[N], notswap = new int[N];
+        swap[0] = 1;
+        for (int i = 1; i < N; i++) {
+            swap[i] = notswap[i] = Integer.MAX_VALUE;
+            if (A[i - 1] < A[i] && B[i - 1] < B[i]) {
+                // 当满足上述条件时，notswap[i]应该等于notswap[i - 1]保持单调性
+                notswap[i] = notswap[i - 1];
+                // i - 1若交换，i应当交换以保持单调性
+                swap[i] = swap[i - 1] + 1; 
+            }
+            if (A[i - 1] < B[i] && B[i - 1] < A[i]) {
+                // 若满足第一个if时，不应当交换，但如果第一个if中其中一个条件被破坏时，需要交换i - 1
+                notswap[i] = Math.min(notswap[i], swap[i - 1]);
+                // 若满足第一个if时，交换i - 1和i，但如果第一个if中其中一个条件被破坏时，需要不交换i - 1并且交换i
+                swap[i] = Math.min(swap[i], notswap[i - 1] + 1);
+            }
+        }
+        
+        return Math.min(swap[N - 1], notswap[N - 1]);
+    }
+}
