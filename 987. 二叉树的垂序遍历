@@ -1,0 +1,47 @@
+思路：使用优先队列……
+
+https://leetcode-cn.com/problems/vertical-order-traversal-of-a-binary-tree/
+
+class Solution {
+    
+    class Point {
+        int x, y, val;
+        
+        public Point(int x, int y, int val) {
+            this.x = x;
+            this.y = y;
+            this.val = val;
+        }
+    }
+    
+    PriorityQueue<Point> pq;
+    
+    public List<List<Integer>> verticalTraversal(TreeNode root) {
+        pq = new PriorityQueue<>(new Comparator<Point>() {
+            @Override
+            public int compare(Point a, Point b) {
+                if (a.x != b.x) return a.x - b.x;
+                if (a.y != b.y) return b.y - a.y;
+                return a.val - b.val;
+            }
+        });
+        traverse(root, 0, 0);
+        
+        List<List<Integer>> ans = new ArrayList();
+        Integer x = null;
+        while (!pq.isEmpty()) {
+            Point p = pq.poll();
+            if (x == null || x != p.x) ans.add(new ArrayList());
+            x = p.x;
+            ans.get(ans.size() - 1).add(p.val);
+        }
+        
+        return ans;
+    }
+    
+    private void traverse(TreeNode root, int x, int y) {
+        pq.offer(new Point(x, y, root.val));
+        if (root.left != null) traverse(root.left, x - 1, y - 1);
+        if (root.right != null) traverse(root.right, x + 1, y - 1);
+    }
+}
