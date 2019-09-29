@@ -1,0 +1,42 @@
+https://leetcode-cn.com/problems/advantage-shuffle/
+
+解法1：田忌赛马问题。将A，B排序，若A现在最大元素大于B现在最大元素，就匹配；否则将A现在最小元素与之匹配。
+
+class Solution {
+    public int[] advantageCount(int[] A, int[] B) {
+        Arrays.sort(A);
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> (b[1] - a[1]));
+        
+        for (int i = 0; i < B.length; i++) pq.offer(new int[]{i, B[i]});
+        int[] res = new int[A.length];
+        int lo = 0, hi = A.length - 1;
+        for (int i = 0; i < res.length; i++) {
+            int[] tmp = pq.poll();
+            if (tmp[1] < A[hi]) res[tmp[0]] = A[hi--];
+            else res[tmp[0]] = A[lo++];
+        }
+        
+        return res;
+    }
+}
+
+解法2：利用O(Nlog(N))将A排序成一棵BBST，每次寻找B元素对应的最小大于A元素，实际就是田忌赛马解法的变种。只不过上种解法中对于同一A元素匹配的多个B元素，会
+选择最大的B元素，而在此解法中是随机选择一个元素，但最后赢局数不变。（LeetCode的测试用例有反映渠道么……）
+
+class Solution {
+    public int[] advantageCount(int[] A, int[] B) {
+        TreeMap<Integer, Integer> map = new TreeMap();
+        int[] res = new int[A.length];
+        
+        for (int a : A) map.put(a, map.getOrDefault(a, 0) + 1);
+        for (int i = 0; i < B.length; i++) {
+            Integer x = map.ceilingKey(B[i]);
+            if (x == null) x = map.firstKey();
+            map.put(x, map.get(x) - 1);
+            if (map.get(x) == 0) map.remove(x);
+            res[i] = x;
+        }
+        
+        return res;
+    }
+}
