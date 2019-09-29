@@ -1,0 +1,32 @@
+思路：对于每个元素而言最近距离和本身是否为0和邻居最小距离有关；对边角元素而言与两个邻居有关；对边上元素非角元素而言与三个邻居有关；对内陆元素与四个邻居
+有关。第一遍先遍历左邻居和上邻居，先初始化元素(0, 0），若本身为0则置为0，否则置为一个极大数表示在左边和右边不存在这样一个0。第一行遍历左邻，第一列遍历
+上邻，之后从上至下，从左至右遍历上邻和左邻。第二遍遍历右邻和下邻，(m - 1, n - 1)不用管因为邻居已遍历完，倒数一列遍历下邻，倒数一行遍历右邻，之后从下
+至上，从右至左，遍历下邻和右邻。
+
+https://leetcode-cn.com/problems/01-matrix/
+
+class Solution {
+    public int[][] updateMatrix(int[][] matrix) {
+        int m = matrix.length, n = matrix[0].length;
+        int[][] dists = new int[m][n];
+        
+        dists[0][0] = matrix[0][0] == 0 ? 0 : 50000;
+        for (int i = 1; i < n; i++)
+            dists[0][i] = matrix[0][i] == 0 ? 0 : dists[0][i - 1] + 1;
+        for (int i = 1; i < m; i++)
+            dists[i][0] = matrix[i][0] == 0 ? 0 : dists[i - 1][0] + 1;
+        for (int i = 1; i < m; i++)
+            for (int j = 1; j < n; j++)
+                dists[i][j] = matrix[i][j] == 0 ? 0 : Math.min(dists[i - 1][j], dists[i][j - 1]) + 1;
+        
+        for (int i = n - 2; i >= 0; i--)
+            dists[m - 1][i] = Math.min(dists[m - 1][i], dists[m - 1][i + 1] + 1);
+        for (int i = m - 2; i >= 0; i--)
+            dists[i][n - 1] = Math.min(dists[i][n - 1], dists[i + 1][n - 1] + 1);
+        for (int i = m - 2; i >= 0; i--)
+            for (int j = n - 2; j >= 0; j--)
+                dists[i][j] = Math.min(dists[i][j], Math.min(dists[i + 1][j] + 1, dists[i][j + 1] + 1));
+        
+        return dists;
+    }
+}
