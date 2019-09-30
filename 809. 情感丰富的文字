@@ -1,0 +1,52 @@
+https://leetcode-cn.com/problems/expressive-words/
+
+class Solution {
+    public int expressiveWords(String S, String[] words) {
+        List<int[]> dicts = new ArrayList();
+        int count = 0;
+        for (int i = 0; i < S.length(); i++) {
+            if (i + 1 < S.length()) {
+                if (S.charAt(i) != S.charAt(i + 1)) {
+                    count++;
+                    dicts.add(new int[]{S.charAt(i) - 'a', count});
+                    count = 0;
+                } else {
+                    count++;
+                }
+            } else {
+                if (i != 0) {
+                    if (S.charAt(i) != S.charAt(i - 1)) {
+                        dicts.add(new int[]{S.charAt(i) - 'a', 1});
+                    } else {
+                        count++;
+                        dicts.add(new int[]{S.charAt(i) - 'a', count});
+                    }
+                }
+            }
+        }
+        
+        int res = 0;
+        for (int i = 0; i < words.length; i++) {
+            int j = 0, k = 0;
+            String s = words[i];
+            while (j < s.length()) {
+                count = 1;
+                if (s.charAt(j) != (char)(dicts.get(k)[0] + 'a')) break;
+                j++;
+                if (j < s.length() && s.charAt(j) == s.charAt(j - 1)) {
+                    while (j < s.length() && s.charAt(j) == s.charAt(j - 1)) {
+                        j++;
+                        count++;
+                    }
+                }
+                
+                if (dicts.get(k)[1] != count && (count > dicts.get(k)[1] || dicts.get(k)[1] < 3)) break;
+                // System.out.println(i + ": " + j + " " + count + " dicts: " + k + " " + (char)(dicts.get(k)[0] + 'a') + " " + dicts.get(k)[1]);
+                if (j == s.length() && k == dicts.size() - 1) res++;
+                k++;
+            }
+        }
+        
+        return res;
+    }
+}
