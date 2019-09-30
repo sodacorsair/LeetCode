@@ -1,0 +1,36 @@
+解法：排序完后，求出每个下标i结尾的子序列最大子集长度和前驱坐标，之后的坐标与前面每个坐标的子集进行比对求出最大子集和前驱下标。
+
+https://leetcode-cn.com/problems/largest-divisible-subset/submissions/
+
+class Solution {
+    public List<Integer> largestDivisibleSubset(int[] nums) {
+        int n = nums.length, max = 0, index = -1;
+        int[] count = new int[n], pre = new int[n];
+        Arrays.sort(nums);
+        
+        for (int i = 0; i < n; i++) {
+            pre[i] = -1;
+            count[i] = 1;
+            for (int j = i - 1; j >= 0; j--) {
+                if (nums[i] % nums[j] == 0) {
+                    if (count[j] + 1 > count[i]) {
+                        count[i] = count[j] + 1;
+                        pre[i] = j;
+                    }
+                }
+            }
+            if (count[i] > max) {
+                max = count[i];
+                index = i;
+            }
+        }
+        
+        List<Integer> ans = new ArrayList();
+        while (index != -1) {
+            ans.add(0, nums[index]);
+            index = pre[index];
+        }
+        
+        return ans;
+    }
+}
