@@ -1,0 +1,24 @@
+思路：每个下标创建不同公差的最大长度数组。
+
+https://leetcode-cn.com/problems/longest-arithmetic-sequence/submissions/
+
+class Solution {
+    public int longestArithSeqLength(int[] A) {
+        int n = A.length, max = 1;
+        HashMap<Integer, Integer>[] m = new HashMap[n];
+        for (int i = 0; i < n; i++) {
+            m[i] = new HashMap();
+            for (int j = i - 1; j >= 0; j--) {
+                int diff = A[i] - A[j];
+                if (m[i].getOrDefault(diff, 0) < m[j].getOrDefault(diff, 1) + 1) {
+                    m[i].put(diff, m[j].getOrDefault(diff, 1) + 1);
+                }
+                if (max < m[i].get(diff)) {
+                    max = m[i].get(diff);
+                }
+            }
+        }
+        
+        return max;
+    }
+}
