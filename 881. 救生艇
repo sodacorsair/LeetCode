@@ -1,0 +1,17 @@
+思路：双指针。小心边界条件。采取先遍历再递增，当长度为奇数时i,j可能会指向同一坐标，此时i判不判断无所谓，j下一步自减会退出循环。
+
+https://leetcode-cn.com/problems/boats-to-save-people/submissions/
+
+class Solution {
+    public int numRescueBoats(int[] people, int limit) {
+        Arrays.sort(people);
+        int i = 0, j = people.length - 1, boats = 0, left;
+        while (i <= j) {
+            left = limit - people[j];
+            if (people[i] <= left) i++;
+            j--;
+            boats++;
+        }
+        return boats;
+    }
+}
