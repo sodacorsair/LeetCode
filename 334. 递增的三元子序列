@@ -1,0 +1,16 @@
+思路：这题一开始拿单调栈做，大材小用。其实先拿最小值去拦截等于小于它的值，再拿中间值去拦截大于最小值但在最小值区间右侧且小于等于它的值，拦截失败说明序列
+诞生。
+
+https://leetcode-cn.com/problems/increasing-triplet-subsequence/submissions/
+
+class Solution {
+    public boolean increasingTriplet(int[] nums) {
+        int min = Integer.MAX_VALUE, mid = Integer.MAX_VALUE;
+        for (int num : nums) {
+            if (num <= min) min = num;
+            else if (num <= mid) mid = num;
+            else return true;
+        }
+        return false;
+    }
+}
