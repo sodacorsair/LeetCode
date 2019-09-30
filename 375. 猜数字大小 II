@@ -1,0 +1,23 @@
+思路：区间长度为1的dp均为0，区间长度为2可以分解为两个子问题，依此类推。
+
+https://leetcode-cn.com/problems/guess-number-higher-or-lower-ii/submissions/
+
+class Solution {
+    public int getMoneyAmount(int n) {
+        int[][] dp = new int[n + 1][n + 1];
+        
+        for (int offset = 1; offset < n; offset++) {
+            for (int i = 1; i + offset <= n; i++) {
+                int j = i + offset;
+                dp[i][j] = Integer.MAX_VALUE;
+                for (int k = i; k <= j; k++) {
+                    dp[i][j] = Math.min(dp[i][j], 
+                                       k + Math.max(i < k - 1 ? dp[i][k - 1] : 0,
+                                                    j > k + 1 ? dp[k + 1][j] : 0));
+                }
+            }
+        }
+        
+        return dp[1][n];
+    }
+}
