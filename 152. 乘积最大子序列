@@ -1,0 +1,19 @@
+思路：保存前一个坐标的最大积和最小积（因为可能最小积是负号，后面来个负数一乘就翻身了），跟当前坐标相乘，找最大值。
+
+https://leetcode-cn.com/problems/maximum-product-subarray/
+
+class Solution {
+    public int maxProduct(int[] nums) {
+        int n = nums.length;
+        int max = nums[0], min = nums[0], res = nums[0], curmax, curmin;
+        for (int i = 1; i < n; i++) {
+            curmax = nums[i] * max;
+            curmin = nums[i] * min;
+            max = Math.max(nums[i], Math.max(curmax, curmin));
+            min = Math.min(nums[i], Math.min(curmax, curmin));
+            res = Math.max(res, max);
+        }
+        
+        return res;
+    }
+}
