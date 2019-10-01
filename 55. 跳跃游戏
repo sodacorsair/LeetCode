@@ -1,0 +1,15 @@
+思路：更新边界和比较边界和下标即可。
+
+https://leetcode-cn.com/problems/jump-game/submissions/
+
+class Solution {
+    public boolean canJump(int[] nums) {
+        int max = 0;
+        for (int i = 0; i < nums.length; i++)
+            if (max >= nums.length - 1) return true;
+            else if (max >= i) max = Math.max(max, i + nums[i]);
+            else return false;
+            
+        return true;
+    }
+}
