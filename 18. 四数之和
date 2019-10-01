@@ -1,0 +1,34 @@
+思路：对于K数之和，从前往后固定住k - 2个数，再对后面的序列进行双指针求二数之和。
+
+https://leetcode-cn.com/problems/4sum/submissions/
+
+class Solution {
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        List<List<Integer>> res = new ArrayList();
+        List<Integer> temp;
+        int sum, cur;
+        Arrays.sort(nums);
+        for (int i = 0; i < nums.length - 3; i++) {
+            if (i > 0 && nums[i] == nums[i - 1]) continue;
+            for (int j = i + 1; j < nums.length - 2; j++) {
+                if (j > i + 1 && nums[j] == nums[j - 1]) continue;
+                int lo = j + 1, hi = nums.length - 1;
+                sum = target - nums[i] - nums[j];
+                while (lo < hi) {
+                    cur = nums[lo] + nums[hi];
+                    if (cur == sum) {
+                        temp = new ArrayList(Arrays.asList(new Integer[]{nums[i], nums[j], nums[lo], nums[hi]}));
+                        res.add(temp);
+                        while (lo < hi && nums[lo + 1] == nums[lo]) lo++;
+                        while (lo < hi && nums[hi - 1] == nums[hi]) hi--;
+                        lo++;
+                        hi--;
+                    } else if (cur < sum) lo++;
+                    else hi--;
+                }
+            }
+        }
+        
+        return res;
+    }
+}
