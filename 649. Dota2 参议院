@@ -1,0 +1,54 @@
+思路：分别记录两派议员人数和禁止次数。
+
+https://leetcode-cn.com/problems/dota2-senate/
+
+class Solution {
+    public String predictPartyVictory(String senate) {
+        Queue<Character> q = new LinkedList();
+        int r = 0, d = 0, R = 0, D = 0;
+        for (int i = 0; i < senate.length(); i++) {
+            if (senate.charAt(i) == 'D') {
+                if (r != 0) r--;
+                else {
+                    d++;
+                    q.offer('D');
+                    D++;
+                }
+            } else {
+                if (d != 0) d--;
+                else {
+                    r++;
+                    q.offer('R');
+                    R++;
+                }
+            }
+        }
+        
+        while (D != 0 && R != 0) {
+            // System.out.println(q);
+            // // System.out.println(D + " " + d + " " + R + " " + r);
+            
+            if (q.poll() == 'D') {
+                if (r != 0) {
+                    r--;
+                    D--;
+                }
+                else {
+                    d++;
+                    q.offer('D');
+                }
+            } else {
+                if (d != 0) {
+                    d--;
+                    R--;
+                }
+                else {
+                    r++;
+                    q.offer('R');
+                }
+            }
+        }
+        
+        return D == 0 ? "Radiant" : "Dire";
+    }
+}
