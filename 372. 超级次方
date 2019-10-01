@@ -1,0 +1,22 @@
+https://leetcode-cn.com/problems/super-pow/submissions/
+
+class Solution {
+    public int superPow(int a, int[] b) {
+        int res = 1;
+        for (int i = 0; i < b.length; i++) {
+            res = qPow(res, 10) % 1337;
+            res = res * qPow(a, b[i]) % 1337;
+        }
+        return res;
+    }
+    
+    private int qPow(int a, int pow) {
+        int p = a % 1337, ans = 1;
+        while (pow > 0) {
+            if ((pow & 1) != 0) ans = ans * p % 1337;
+            p = p * p % 1337;
+            pow >>= 1;
+        }
+        return ans;
+    }
+}
