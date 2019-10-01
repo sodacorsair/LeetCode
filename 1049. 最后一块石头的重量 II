@@ -1,0 +1,19 @@
+思路：由于可以写成将数组分成两堆使它们的差最小，所以使其中一组逼近和的一半。dp[i]表示在当前决定装当前石头或不装后的上限为i时的最大重量。
+
+https://leetcode-cn.com/problems/last-stone-weight-ii/submissions/
+
+class Solution {
+    public int lastStoneWeightII(int[] stones) {
+        int n = stones.length, sum = 0;
+        for (int stone : stones) sum += stone;
+        int max = sum / 2;
+        int[] dp = new int[max + 1];
+        for (int i = 0; i < n; i++) {
+            int cur = stones[i];
+            for (int j = max; j >= cur; j--)
+                dp[j] = Math.max(dp[j], dp[j - cur] + cur);
+        }
+        
+        return sum - 2 * dp[max];
+    }
+}
