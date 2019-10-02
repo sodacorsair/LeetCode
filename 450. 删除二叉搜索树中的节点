@@ -1,0 +1,69 @@
+思路：当找到该点后，若该点左子树为空，就将右子树接给前驱的右儿子；右子树为空，就将左子树接给前驱的左儿子；均为空，随便接一棵；均不为空，则从右子树中顺
+左侧链往下找到最小点，将最小点的值赋给当前点，由于最小点只有右子树，将右子树接给最小点的前驱点的右儿子即可。若被删除节点是根节点，只需在根节点前接一哨兵
+即可。
+
+https://leetcode-cn.com/problems/delete-node-in-a-bst/submissions/
+
+class Solution {
+    public TreeNode deleteNode(TreeNode root, int key) {
+        if (root == null) return null;
+        
+        TreeNode cur = root, suc = null, sentinel = new TreeNode(0), pre = sentinel;
+        sentinel.left = root;
+        
+        while (cur != null) {
+            if (cur.val == key) break;
+            pre = cur;
+            if (cur.val > key) cur = cur.left;
+            else cur = cur.right;
+        }
+        
+        if (cur == null) return root;
+        
+        if (cur.right == null) {
+            if (pre.left != null && pre.left == cur) pre.left = cur.left;
+            else pre.right = cur.left;
+        } else if (cur.left == null) {
+            if (pre.left != null && pre.left == cur) pre.left = cur.right;
+            else pre.right = cur.right;
+        } else {
+            pre = cur;
+            suc = cur.right;
+            while (suc.left != null) {
+                pre = suc;
+                suc = suc.left;
+            }
+            cur.val = suc.val;
+            if (pre.left != null && pre.left == suc) pre.left = suc.right;
+            else pre.right = suc.right;
+        }
+        
+        return sentinel.left;
+    }
+}
+
+递归版
+
+class Solution {
+    public TreeNode deleteNode(TreeNode root, int key) {
+        if (root == null) return null;
+        
+        if (root.val > key) root.left = deleteNode(root.left, key);
+        else if (root.val < key) root.right = deleteNode(root.right, key);
+        else {
+            if (root.left == null) return root.right;
+            else if (root.right == null) return root.left;
+            
+            root.val = findMinVal(root.right);
+            root.right = deleteNode(root.right, root.val);
+        }
+        
+        return root;
+    }
+    
+    private int findMinVal(TreeNode root) {
+        while (root.left != null)
+            root = root.left;
+        return root.val;
+    }
+}
