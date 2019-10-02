@@ -1,0 +1,18 @@
+https://leetcode-cn.com/problems/search-a-2d-matrix-ii/submissions/
+
+思路：因为只有在行和列上有序，需要逐行逐列搜索，由于只能判断目标值大小两种情况，为了缩小搜查范围从右上角或者左下角开始。
+
+class Solution {
+    public boolean searchMatrix(int[][] matrix, int target) {
+        if (matrix == null || matrix.length == 0 || matrix[0].length == 0) return false;
+        
+        int row = matrix.length, col =matrix[0].length, x = 0, y = col - 1;
+        while (x < row && y >= 0) {
+            if (matrix[x][y] == target) return true;
+            else if (matrix[x][y] < target) x++;
+            else y--;
+        }
+        
+        return false;
+    }
+}
