@@ -1,0 +1,30 @@
+思路：给予一码流，码流中包含多段UTF-8编码，每段编码保证：若长度为1字节，开头为0；若长度为n（n > 1）字节，第一个字节开头需有n个1，后面n - 1个字节开头
+均为10；除此之外均非法，包括段开头为01，声明字节长度大于4字节或者码流长度，后续字节开头不为01三种情况。
+
+https://leetcode-cn.com/problems/utf-8-validation/submissions/
+
+class Solution {
+    public boolean validUtf8(int[] data) {
+        if (data == null || data.length == 0) return false;
+        
+        int mask1 = 1 << 7, mask2 = 1 << 6, i = 0;
+        while (i < data.length) {
+            int bit = 1 << 7, len = 0;
+            for (; len < 8; len++) {
+                if ((data[i] & bit) != bit) break;
+                bit >>= 1;
+            }
+            
+            if (len + i > data.length || len == 1 || len > 4) return false;
+            
+            for (int j = i + 1; j < i + len; j++) {
+                if ((data[j] & mask1) != mask1 || (data[j] & mask2) != 0)
+                    return false;
+            }
+            
+            i = len == 0 ? i + 1 : i + len;
+        }
+        
+        return true;
+    }
+}
