@@ -1,0 +1,32 @@
+思路：BFS搜索，队列入队将要判别是否涂色的格子，出队时判断是否在边界上或者周围是否状态为0但颜色不同的格子，如果有状态1的格子说明已访问过，如果状态为0颜色
+一致需要入队。
+
+https://leetcode-cn.com/problems/coloring-a-border/submissions/
+
+class Solution {
+    public int[][] colorBorder(int[][] grid, int r0, int c0, int color) {
+        int old = grid[r0][c0], m = grid.length, n = grid[0].length;
+        int[][] visited = new int[m][n];
+        if (old == color) return grid;
+        
+        Queue<int[]> q = new LinkedList();
+        q.offer(new int[]{r0, c0});
+        visited[r0][c0] = 1;
+        int[][] dirs = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+        while (!q.isEmpty()) {
+            int[] tmp = q.poll();
+            for (int[] dir : dirs) {
+                int x = tmp[0] + dir[0], y = tmp[1] + dir[1];
+                if (x < 0 || x >= m || y < 0 || y >= n || visited[x][y] == 0 && grid[x][y] != old) {
+                    grid[tmp[0]][tmp[1]] = color;
+                    continue;
+                }
+                if (visited[x][y] != 0) continue;
+                visited[x][y] = 1;
+                q.offer(new int[]{x, y});
+            }
+        }
+        
+        return grid;
+    }
+}
