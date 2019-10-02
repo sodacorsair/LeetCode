@@ -1,0 +1,17 @@
+思路：比较偶数坐标小于两邻或者奇数坐标小于两邻的操作次数。若操作均在奇数和偶数坐标发生，若奇数或者偶数坐标最后大于两邻，则撤销奇数或者偶数位上的操作使得
+数组呈锯齿状且次数更少，所以操作只可能发生在奇数位或者偶数位上。
+
+https://leetcode-cn.com/problems/decrease-elements-to-make-array-zigzag/submissions/
+
+class Solution {
+    public int movesToMakeZigzag(int[] nums) {
+        int left, right, n = nums.length;
+        int[] res = new int[2];
+        for (int i = 0; i < n; i++) {
+            left = i > 0 ? nums[i - 1] : 1001;
+            right = i < n - 1 ? nums[i + 1] : 1001;
+            res[i % 2] += Math.max(0, nums[i] - Math.min(left, right) + 1);
+        }
+        return Math.min(res[0], res[1]);
+    }
+}
