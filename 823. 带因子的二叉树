@@ -1,0 +1,29 @@
+https://leetcode-cn.com/problems/binary-trees-with-factors/submissions/
+
+思路：当出现两个因子时，乘积的树数量增加二者的树数量之积。利用乘积的平方根作为上界来加速。
+
+class Solution {
+    public int numFactoredBinaryTrees(int[] A) {
+        Arrays.sort(A);
+        int n = A.length, MOD = (int)(1e9 + 7);
+        long[] dp = new long[n];
+        Map<Integer, Integer> index = new HashMap();
+        
+        for (int i = 0; i < n; i++) {
+            index.put(A[i], i);
+            double bound = Math.sqrt(A[i]);
+            dp[i] = 1;
+            for (int j = 0; j < i; j++) {
+                int tmp = A[i] / A[j];
+                if (A[j] > bound) break;
+                if (A[i] % A[j] != 0 || !index.containsKey(tmp)) continue;
+                if (tmp == A[j]) dp[i] = (dp[i] + dp[j] * dp[j]) % MOD;
+                else dp[i] = (dp[i] + 2 * dp[j] * dp[index.get(tmp)]) % MOD;
+            }
+        }
+        
+        long ans = 0;
+        for (long d : dp) ans += d;
+        return (int)(ans % MOD);
+    }
+}
