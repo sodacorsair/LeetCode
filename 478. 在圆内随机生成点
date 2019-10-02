@@ -1,0 +1,21 @@
+思路：直接使用均匀分布生成极坐标点(r, theta)不可取。圆内均匀分布实际上为p(r) / r ^ 2 * 归一化系数。可以看到映射的面积是平方，所以必须用平方根对冲。
+
+https://leetcode-cn.com/problems/generate-random-point-in-a-circle/submissions/
+
+class Solution {
+    double radius, x_center, y_center;
+
+    public Solution(double radius, double x_center, double y_center) {
+        this.radius = radius;
+        this.x_center = x_center;
+        this.y_center = y_center;
+    }
+    
+    public double[] randPoint() {
+        double len = Math.sqrt(Math.random()) * radius;
+        double deg = Math.random() * 2 * Math.PI;
+        double x = x_center + len * Math.cos(deg);
+        double y = y_center + len * Math.sin(deg);
+        return new double[]{x, y};
+    }
+}
