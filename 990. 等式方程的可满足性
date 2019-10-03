@@ -1,0 +1,47 @@
+https://leetcode-cn.com/problems/satisfiability-of-equality-equations/submissions/
+
+解法：先用并查集将相等的数字分为相同的集合，再检查不等式中的两项是否属于同一集合。
+
+class Solution {
+    int[] parents;
+    
+    public boolean equationsPossible(String[] equations) {
+        List<int[]> ineqs = new ArrayList();
+        
+        parents = new int[26];
+        for (int i = 0; i < parents.length; i++) parents[i] = i;
+        
+        for (String eq : equations) {
+            int x = eq.charAt(0) - 'a', y = eq.charAt(3) - 'a';
+            if (eq.charAt(1) == '=') union(x, y);
+            else ineqs.add(new int[]{x, y});
+        }
+        
+        for (int[] ineq : ineqs)
+            if (find(ineq[0]) == find(ineq[1]))
+                return false;
+        
+        return true;
+    }
+    
+    private int find(int son) {
+        int root = son;
+        while (root != parents[root])
+            root = parents[root];
+        
+        while (root != parents[son]) {
+            int tmp = parents[son];
+            parents[son] = root;
+            son = tmp;
+        }
+        
+        return root;
+    }
+    
+    private void union(int a, int b) {
+        int pa = find(a), pb = find(b);
+        
+        if (pa != pb) parents[pa] = pb;
+    }
+    
+}
