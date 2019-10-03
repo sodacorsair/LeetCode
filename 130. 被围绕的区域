@@ -1,0 +1,44 @@
+思路：多源BFS
+
+https://leetcode-cn.com/problems/surrounded-regions/submissions/
+
+class Solution {
+    public void solve(char[][] board) {
+        if (board == null || board.length == 0 || board[0].length == 0) return;
+        
+        int m = board.length, n = board[0].length;
+        int[][] dirs = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+        
+        Queue<int[]> source = new LinkedList(), q = new LinkedList();
+        for (int i = 0; i < m; i++) {
+            if (board[i][0] == 'O') source.offer(new int[]{i, 0});
+            if (0 != n - 1 && board[i][n - 1] == 'O') source.offer(new int[]{i, n - 1});
+        }
+        for (int i = 1; i < n - 1; i++) {
+            if (board[0][i] == 'O') source.offer(new int[]{0, i});
+            if (0 != m - 1 && board[m - 1][i] == 'O') source.offer(new int[]{m - 1, i});
+        }
+        
+        while (!source.isEmpty()) {
+            int[] tmp = source.poll();
+            if (board[tmp[0]][tmp[1]] != 'O') continue;
+            q.offer(tmp);
+            board[tmp[0]][tmp[1]] = 'T';
+            while (!q.isEmpty()) {
+                tmp = q.poll();
+                for (int[] dir : dirs) {
+                    int r = tmp[0] + dir[0], c = tmp[1] + dir[1];
+                    if (r < 0 || r >= m || c < 0 || c >= n ||
+                        board[r][c] != 'O')
+                        continue;
+                    q.offer(new int[]{r, c});
+                    board[r][c] = 'T';
+                }
+            }
+        }
+        
+        for (int i = 0; i < m; i++)
+            for (int j = 0; j < n; j++)
+                board[i][j] = board[i][j] == 'T' ? 'O' : 'X';
+    }
+}
