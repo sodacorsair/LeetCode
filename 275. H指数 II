@@ -1,0 +1,20 @@
+https://leetcode-cn.com/problems/h-index-ii/submissions/
+
+思路：H指数实质上是 论文数量P与最小引用次数R满足关系式 P / R <= 1 时，H指数为P。在有序序列中查找时，论文数量越向右越少，引用次数越多，说明比值从大到
+小，这说明实际上是查找满足关系式的区间左端点值，此时H指数最大，故可采用二分查找寻找关系式成立的左端点或者找到论文数量小于等于引用次数的左端点。
+
+class Solution {
+    public int hIndex(int[] citations) {
+        double ratio;
+        int lo = 0, hi = citations.length, mid, n = citations.length;
+        
+        while (lo < hi) {
+            mid = lo + (hi - lo) / 2;
+            ratio = citations[mid] == 0 ? 100 : (double)(n - mid) / (double)citations[mid];
+            if (ratio <= 1) hi = mid;
+            else lo = mid + 1;
+        }
+        
+        return n - hi;
+    }
+}
